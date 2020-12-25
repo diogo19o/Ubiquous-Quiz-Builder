@@ -14,9 +14,9 @@ Bem vindo ao repositório da aplicação Ubiquous Quiz Builder. Uma aplicação 
 * Receber questionários de um utilizador
 * Enviar resposta a uma pergunta
 
-<hr>
+## Requisitos
 
-### Requisitos Funcionais:
+### Funcionais:
 - [ ] Efetuar login.
 - [ ] Registar uma conta.
 - [ ] Três modos de jogo (Clássico, Contra-relógio e Morte súbita).
@@ -28,6 +28,6 @@ Bem vindo ao repositório da aplicação Ubiquous Quiz Builder. Uma aplicação 
 - [ ] Sistema de ranking nos diferentes modos de jogo.
 
 
-### Requisitos Não Funcionais:
+### Não Funcionais:
 - [x] Aplicação desenvolvida em Flutter
 - [x] Aplicação disponivel para Android e IOS
