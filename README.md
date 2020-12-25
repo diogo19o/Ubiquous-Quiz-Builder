@@ -1,9 +1,9 @@
 # Ubiquous-Quizz-Builder
-Ubiquous Quizz Builder
+Bem vindo ao repositório da aplicação Ubiquous Quiz Builder. Uma aplicação para a resposta a quizzes e questionários. Aqui serão apresentados alguns dos seus requisitos.
 
-Esta aplicação vai buscar informação à base de dados por meio de Web services
+## Web services:
 
-## Web services utilizados pela aplicação:
+### Esta aplicação vai buscar informação à base de dados por meio de Web services
 
 * Registar nova conta
 * Autenticar Utilizador
