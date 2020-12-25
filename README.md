@@ -27,5 +27,5 @@ Requisitos Funcionais:
 
 
 Requisitos Não Funcionais:
-- [ ] Aplicação desenvolvida em Flutter
-- [ ] Aplicação disponivel para Android e IOS
+- [x] Aplicação desenvolvida em Flutter
+- [x] Aplicação disponivel para Android e IOS
