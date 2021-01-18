@@ -31,3 +31,4 @@ Bem vindo ao repositório da aplicação Ubiquous Quiz Builder. Uma aplicação 
 ### Não Funcionais:
 - [x] Aplicação desenvolvida em Flutter
 - [x] Aplicação disponivel para Android e IOS
+- [x] Ligação à internet
