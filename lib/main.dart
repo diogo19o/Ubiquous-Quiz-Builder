@@ -1,113 +1,186 @@
+/*
 import 'package:flutter/material.dart';
+import 'package:ubiquous_quizz_builder/models/quiz.dart';
+import 'package:ubiquous_quizz_builder/models/result.dart';
+import 'package:ubiquous_quizz_builder/models/album.dart';
 
-void main() {
-  runApp(MyApp());
-}
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+void main() => runApp(MyApp());
+
+class MyApp extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.yellow,
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+  State<StatefulWidget> createState() {
+    return _MyAppState();
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class _MyAppState extends State<MyApp> {
+  var _perguntaIndex = 0;
+  var _totalScore = 0;
+  final _perguntas = const [
+    {
+      'textoPergunta': 'Qual é a tua cor favorita?',
+      'respostas': [
+        {'text': 'Preto', 'score': 10},
+        {'text': 'Vermelho', 'score': 6},
+        {'text': 'Verde', 'score': 3},
+        {'text': 'Branco', 'score': 1}
+      ]
+    },
+    {
+      'textoPergunta': 'Qual é o teu animal favorito?',
+      'respostas': [
+        {'text': 'Gato', 'score': 10},
+        {'text': 'Cão', 'score': 6},
+        {'text': 'Cavalo', 'score': 3},
+        {'text': 'Coelho', 'score': 1}
+      ]
+    },
+    {
+      'textoPergunta': 'Qual é a tua linguagem favorita?',
+      'respostas': [
+        {'text': 'Java', 'score': 10},
+        {'text': 'C', 'score': 6},
+        {'text': 'Dart', 'score': 3},
+        {'text': 'Kotlin', 'score': 1}
+      ]
+    }
+  ];
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
+  void _responderPergunta(int score) {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      _perguntaIndex++;
+      _totalScore += score;
+    });
+    print(_perguntaIndex);
+  }
+
+  void _resetQuiz() {
+    setState(() {
+      _perguntaIndex = 0;
+      _totalScore = 0;
     });
   }
 
+  Future<Album> futureAlbum;
+
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
+    return MaterialApp(
+        home: Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text('My First App'),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+      body: _perguntaIndex < _perguntas.length
+          ? Quiz(
+              responderPergunta: _responderPergunta,
+              perguntaIndex: _perguntaIndex,
+              perguntas: _perguntas,
+            )
+          : Result(_totalScore, _resetQuiz),
+      /*Center(
+        child: FutureBuilder<Album>(
+          future: futureAlbum,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Text(snapshot.data.id);
+            } else if (snapshot.hasError) {
+              return Text("${snapshot.error}");
+            }
+
+            // By default, show a loading spinner.
+            return CircularProgressIndicator();
+          },
         ),
+      ),*/
+    ));
+  }
+
+  Future<Album> getDataTest() async {
+    //192.168.1.70
+    print('ola teste!\n');
+    /*var url =
+        'http://192.168.1.70/TFC/AndroidQuizBuilder-master/php/www/teste.php?action=pergunta&PerguntaID=6';
+    http.Response response = await http.get(url);
+    var data = jsonDecode(response.body);
+    print("text: " + data.toString());
+    print("value: " + data['respostasDaPergunta'][0]['RespostaID']);*/
+    var url =
+    'http://192.168.1.70/TFC/AndroidQuizBuilder-master/php/www/teste.php?action=questionarios';
+    http.Response response = await http.get(url);
+    var data = jsonDecode(response.body);
+    print("text: " + data.toString());
+    print("Size: ${data.toString().length}");
+
+    return Album.fromJson(data);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    futureAlbum = getDataTest();
+  }
+}
+*/
+
+import 'dart:convert';
+
+import 'package:chopper/chopper.dart';
+import 'package:crypto/crypto.dart';
+import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
+import 'package:provider/provider.dart';
+import 'package:ubiquous_quizz_builder/data/Common.dart';
+import 'package:ubiquous_quizz_builder/data/questionario_service_api.dart';
+import 'package:ubiquous_quizz_builder/pages/home-page.dart';
+
+import 'data/user_service_api.dart';
+
+void main() {
+  final services = ChopperClient(
+    baseUrl: Common.URL_ADRESS_ALL,
+    services: [UserService.create(), QuestionarioService.create()],
+    interceptors: [
+      HeadersInterceptor({'Cache-Control' : 'no-cache'}),
+      HttpLoggingInterceptor(),
+    ],
+    converter: JsonConverter(),
+  );
+
+  _setupLogging();
+  runApp(MyApp(services: services));
+}
+
+class MyApp extends StatelessWidget {
+  ChopperClient services;
+
+  MyApp({this.services});
+
+  @override
+  Widget build(BuildContext context) {
+    var bytes = utf8.encode("diogo"); // data being hashed
+
+    var digest = sha1.convert(bytes);
+
+    print("Digest as bytes: ${digest.bytes}");
+    print("Digest as hex string: $digest");
+
+    return Provider(
+      builder: (_) => services,
+      dispose: (_, ChopperClient services) => services.dispose(),
+      child: MaterialApp(
+        title: "Material App",
+        home: Homepage(),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+}
+
+void _setupLogging() {
+  Logger.root.level = Level.ALL;
+  Logger.root.onRecord.listen((rec) {
+    print('${rec.level.name}: ${rec.time}: ${rec.message}');
+  });
 }
