@@ -46,7 +46,7 @@ class _ListQuestionariosState extends State<ListQuestionarios> {
         return Text("Modo Morte Súbita");
         break;
       default:
-        return Text("Modo Morte-Súbita");
+        return Text("Modo de Jogo");
     }
   }
 

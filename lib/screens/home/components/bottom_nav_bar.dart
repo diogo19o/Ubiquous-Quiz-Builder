@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:ubiquous_quizz_builder/app_colors.dart';
+import 'package:ubiquous_quizz_builder/screens/listQuestionarios/list.dart';
 
 class CurvedBottomNavBar extends StatefulWidget {
   @override
@@ -57,6 +58,11 @@ class _CurvedBottomNavBarState extends State<CurvedBottomNavBar> {
                       TextButton(
                           onPressed: () {
                             setBottomBarIndex(1);
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => ListQuestionarios("all"),
+                              ),
+                            );
                           },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.end,
@@ -73,6 +79,11 @@ class _CurvedBottomNavBarState extends State<CurvedBottomNavBar> {
                       TextButton(
                           onPressed: () {
                             setBottomBarIndex(2);
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => ListQuestionarios("questionario"),
+                              ),
+                            );
                           },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
