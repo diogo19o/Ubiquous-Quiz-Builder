@@ -4,8 +4,7 @@ A componente atual a ser desenvolvida neste repositórioé uma aplicação que n
 
 ## Como correr o projeto?
 
-Abra o AndroidStudio. Caso esteja com um projeto aberto, vá a "File" > "Close Project" e agora na janela inicial selecione "Get from Version Control", e cole o link abaixo:
-Link: https://github.com/diogo19o/Ubiquous-Quizz-Builder.git
+Abra o AndroidStudio. Caso esteja com um projeto aberto, vá a "File" > "Close Project" e agora na janela inicial selecione "Get from Version Control", e cole o link: https://github.com/diogo19o/Ubiquous-Quizz-Builder.git
 
 Pressione "Clone", agora que já tem o projeto no seu dispositivo, precisamos de ir buscar as dependencias utilizadas. Pode fazer isso por:
 * Abrir o terminal e escrever o seguinte comando "flutter pub get"
