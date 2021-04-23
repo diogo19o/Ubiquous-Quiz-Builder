@@ -2,7 +2,9 @@
     package="lig.tfc.ubiquous_quizz_builder">
    <application
         android:label="ubiquous_quizz_builder"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true">
+
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'pergunta.dart';
 import 'resposta.dart';
 
-class Quiz extends StatelessWidget {
+class Quiz /*extends StatelessWidget*/ {
   final Function responderPergunta;
   final int perguntaIndex;
   final List<Map<String, Object>> perguntas;
@@ -12,7 +12,7 @@ class Quiz extends StatelessWidget {
       @required this.responderPergunta,
       @required this.perguntaIndex});
 
-  @override
+  /*@override
   Widget build(BuildContext context) {
     return Column(
       children: [
@@ -24,5 +24,5 @@ class Quiz extends StatelessWidget {
         }).toList()
       ],
     );
-  }
+  }*/
 }

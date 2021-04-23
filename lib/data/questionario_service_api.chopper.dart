@@ -17,9 +17,9 @@ class _$QuestionarioService extends QuestionarioService {
   final definitionType = QuestionarioService;
 
   @override
-  Future<Response<dynamic>> getQuestionario(String id) {
+  Future<Response<Teste>> getQuestionario(String id) {
     final $url = 'teste.php/?action=questionario&QuestionarioID=$id';
     final $request = Request('GET', $url, client.baseUrl);
-    return client.send<dynamic, dynamic>($request);
+    return client.send<Teste, Teste>($request);
   }
 }

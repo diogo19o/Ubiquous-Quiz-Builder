@@ -1,4 +1,10 @@
+import 'dart:io';
+
 import 'package:chopper/chopper.dart';
+import 'file:///C:/Users/diogo/AndroidStudioProjects/ubiquous_quizz_builder/lib/data/model_converter.dart';
+import 'package:http/io_client.dart' as http;
+
+import 'Common.dart';
 
 part 'user_service_api.chopper.dart';
 
@@ -11,22 +17,27 @@ abstract class UserService extends ChopperService {
   );
 
   @Post(path: 'user.php', headers: {contentTypeKey: formEncodedHeaders})
-  Future<Response> postPost(
+  Future<Response> loginUser(
     @Body() Map<String, String> body,
   );
 
-  static UserService create([ChopperClient client]) =>
-      _$UserService(client);
+  @Post(path: 'user.php', headers: {contentTypeKey: formEncodedHeaders})
+  Future<Response> registerUser(
+      @Body() Map<String, String> body,
+      );
 
-  // static UserServiceApi create() {
-  //   final client = ChopperClient(
-  //     baseUrl: Common.URL_ADRESS_ALL,
-  //     interceptors: [HttpLoggingInterceptor()],
-  //     services: [
-  //       _$UserServiceApi(),
-  //     ],
-  //     converter: JsonConverter(),
-  //   );
-  //   return _$UserServiceApi(client);
-  // }
+  static UserService create() {
+    final client = ChopperClient(
+      /*client: http.IOClient(
+        HttpClient()..connectionTimeout = const Duration(seconds: 10),
+      ),*/
+      baseUrl: Common.URL_BASE_ADDRESS,
+      interceptors: [HttpLoggingInterceptor()],
+      services: [
+        _$UserService(),
+      ],
+      converter: JsonConverter(),
+    );
+    return _$UserService(client);
+  }
 }

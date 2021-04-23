@@ -1,22 +1,32 @@
+import 'package:flutter/services.dart';
+
 class Common {
-  static final String ip = "192.168.1.5"; // trocar se estiver fora de casa
-  static final String SERVICE_API_URL =
-      "http://" + ip + "/TFC/AndroidQuizBuilder-master/php/www/user.php/";
-  static final String URL_ADRESS_ALL =
-      "http://" + ip + "/TFC/AndroidQuizBuilder-master/php/www";
-  static final String URL_ADRESS_QUESTIONARIO = "http://" +
-      ip +
-      "/TFC/AndroidQuizBuilder-master/php/www/teste.php?action=questionarios";
-  static final String URL_ADRESS_PERGUNTAS = "http://" +
-      ip +
-      "/TFC/AndroidQuizBuilder-master/php/www/teste.php?action=perguntas";
-  static final String URL_ADRESS_RESPOSTAS = "http://" +
-      ip +
-      "/TFC/AndroidQuizBuilder-master/php/www/teste.php?action=respostas";
-  static final String URL_ADRESS_RESULTADOS = "http://" +
-      ip +
-      "/TFC/AndroidQuizBuilder-master/php/www/teste.php?action=resultados";
-  static final String URL_ADRESS_UTILIZADORES = "http://" +
-      ip +
-      "/TFC/AndroidQuizBuilder-master/php/www/teste.php?action=utilizadores";
+
+  //Local address to connect to WampServer
+  // Do "ipconfig" on Windows cmd or
+  // "ifconfig" on Linux, check your ipv4 Adress
+  // then change this localIp variable value
+  static final String localIp = "192.168.1.70";
+
+  //local path to content of "www" folder in WampServer directory
+  static final String baseLocalServiceUrl =
+      "http://" + localIp + "/TFC-Ubiquous-Quiz-Builder/php/";
+
+  //Remote address to connect to Heroku App and API
+  static final String baseRemoteServiceUrl = "https://php-ubiquous-quiz-builder.herokuapp.com/";
+
+  //DON'T FORGET TO CHANGE THIS!
+  // ignore: slash_for_doc_comments
+  /********************************* IMPORTANT *********************************
+      Change variable URL_BASE_ADDRESS down below if using remote server instead of local
+
+      Local: Common.baseLocalServiceUrlL
+      Remote: Common.baseRemoteServiceUrl
+
+      After changing this, run "flutter pub run build_runner build" on terminal
+      to re-generate user_service_api.chopper.dart
+   ****************************************************************************/
+  static final String URL_BASE_ADDRESS = baseRemoteServiceUrl;
+  //------
+
 }

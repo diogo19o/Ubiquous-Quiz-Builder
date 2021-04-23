@@ -1,7 +1,7 @@
 /*
 import 'package:flutter/material.dart';
 import 'package:ubiquous_quizz_builder/models/quiz.dart';
-import 'package:ubiquous_quizz_builder/models/result.dart';
+import 'package:ubiquous_quizz_builder/models/resultado.dart';
 import 'package:ubiquous_quizz_builder/models/album.dart';
 
 import 'package:http/http.dart' as http;
@@ -127,36 +127,32 @@ class _MyAppState extends State<MyApp> {
 
 import 'dart:convert';
 
-import 'package:chopper/chopper.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
-import 'package:ubiquous_quizz_builder/data/Common.dart';
-import 'package:ubiquous_quizz_builder/data/questionario_service_api.dart';
-import 'package:ubiquous_quizz_builder/pages/home-page.dart';
-
-import 'data/user_service_api.dart';
+import 'package:ubiquous_quizz_builder/data/access_service_api.dart';
+import 'package:ubiquous_quizz_builder/screens/login/login_page.dart';
 
 void main() {
-  final services = ChopperClient(
-    baseUrl: Common.URL_ADRESS_ALL,
-    services: [UserService.create(), QuestionarioService.create()],
-    interceptors: [
-      HeadersInterceptor({'Cache-Control' : 'no-cache'}),
-      HttpLoggingInterceptor(),
-    ],
-    converter: JsonConverter(),
-  );
+
+  Services services = Services();
+  services.fetchData("all")/*.then((value) {
+    DataSource dataSource = DataSource();
+    print(dataSource.questionarios[0].titulo);
+    print(dataSource.perguntas.toString());
+    print(dataSource.respostas.toString());
+    print(dataSource.resultados.toString());
+    print(dataSource.utilizadores.toString());
+  })*/;
 
   _setupLogging();
-  runApp(MyApp(services: services));
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  ChopperClient services;
-
-  MyApp({this.services});
+  Services services = Services();
 
   @override
   Widget build(BuildContext context) {
@@ -168,11 +164,16 @@ class MyApp extends StatelessWidget {
     print("Digest as hex string: $digest");
 
     return Provider(
-      builder: (_) => services,
-      dispose: (_, ChopperClient services) => services.dispose(),
-      child: MaterialApp(
+      create: (_) => services,
+      child: GetMaterialApp(
         title: "Material App",
-        home: Homepage(),
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primaryColor: Color(0xFF2661FA),
+          scaffoldBackgroundColor: Colors.white,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: LoginScreen(),
       ),
     );
   }
