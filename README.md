@@ -1,5 +1,16 @@
 # Ubiquous-Quizz-Builder
-Bem vindo ao repositório da aplicação Ubiquous Quiz Builder. Uma aplicação para a resposta a quizzes e questionários. Aqui serão apresentados alguns dos seus requisitos.
+Bem vindo ao repositório da aplicação Ubiquous Quiz Builder. Esta aplicação faz parte de uma plataforma com uma componente Web onde permite a utilizadores criarem questionarios, visualizarem as suas estatisticas e tambem fazer a gestão dos mesmos no caso dos administradores.
+A componente atual a ser desenvolvida neste repositórioé uma aplicação que nos permite responder aos questionarios criados na plataforma Web.
+
+## Como correr o projeto?
+
+Abra o AndroidStudio. Caso esteja com um projeto aberto, vá a "File" > "Close Project" e agora na janela inicial selecione "Get from Version Control", e cole o link abaixo:
+Link: https://github.com/diogo19o/Ubiquous-Quizz-Builder.git
+
+Pressione "Clone", agora que já tem o projeto no seu dispositivo, precisamos de ir buscar as dependencias utilizadas. Pode fazer isso por:
+* Abrir o terminal e escrever o seguinte comando "flutter pub get"
+* Ou abrir um dos ficheiros ".dart" denro da pasta "lib" e no canto superior direito clique em "Get Dependencies"
+
 
 ## Web services:
 
@@ -17,11 +28,11 @@ Bem vindo ao repositório da aplicação Ubiquous Quiz Builder. Uma aplicação 
 ## Requisitos
 
 ### Funcionais:
-- [ ] Efetuar login.
+- [x] Efetuar login.
 - [ ] Registar uma conta.
 - [ ] Três modos de jogo (Clássico, Contra-relógio e Morte súbita).
 - [ ] Modo questionário que só pode ser respondido uma vez por pessoa.
-- [ ] Lista de quizzes e questionários ativos.
+- [x] Lista de quizzes e questionários ativos.
 - [ ] Sistema de filtragem/ordenação das listas.
 - [ ] Mostrar o resultado no final de responder a cada quizz.
 - [ ] Guardar pontuações obtidas nos questionários como também o número de quizzes respondidos.
@@ -31,4 +42,4 @@ Bem vindo ao repositório da aplicação Ubiquous Quiz Builder. Uma aplicação 
 ### Não Funcionais:
 - [x] Aplicação desenvolvida em Flutter
 - [x] Aplicação disponivel para Android e IOS
-- [x] Ligação à internet
+- [x] Ligação à internet 
