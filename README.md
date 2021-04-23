@@ -1,6 +1,6 @@
 # Ubiquous-Quizz-Builder
-Bem vindo ao repositório da aplicação Ubiquous Quiz Builder. Esta aplicação faz parte de uma plataforma com uma componente Web onde permite a utilizadores criarem questionarios, visualizarem as suas estatisticas e tambem fazer a gestão dos mesmos no caso dos administradores.
-A componente atual a ser desenvolvida neste repositórioé uma aplicação que nos permite responder aos questionarios criados na plataforma Web.
+Bem vindo ao repositório da aplicação Ubiquous Quiz Builder. Esta aplicação faz parte de uma plataforma com uma componente Web onde permite a utilizadores criarem questionarios, visualizarem as suas estatisticas e tambem fazer a gestão dos mesmos no caso dos administradores.  
+A componente atual a ser desenvolvida neste repositório é uma aplicação que nos permite responder aos questionarios criados na plataforma Web.
 
 ## Como correr o projeto?
 
@@ -9,6 +9,13 @@ Abra o AndroidStudio. Caso esteja com um projeto aberto, vá a "File" > "Close P
 Pressione "Clone", agora que já tem o projeto no seu dispositivo, precisamos de ir buscar as dependencias utilizadas. Pode fazer isso por:
 * Abrir o terminal e escrever o seguinte comando "flutter pub get"
 * Ou abrir um dos ficheiros ".dart" denro da pasta "lib" e no canto superior direito clique em "Get Dependencies"
+
+#### Null Safety Waring!
+*****
+Nota:  
+Se por alguma razão ao dar run da app, acontecerem varios erros relativos a null safety. Por favor entre em contacto para o meu email: diogo.santos.novo@hotmail.com.  
+Esta app não foi desenvolvida para a versão mais recente do Flutter que ja implementa null safety.
+*****
 
 
 ## Web services:
