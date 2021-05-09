@@ -85,6 +85,11 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<bool> login() async {
+
+    setState(() {
+      isApiCallProcess = true;
+    });
+
     final response = await Provider.of<Services>(context, listen: false)
         .login(_username, _password.toString());
 
@@ -95,8 +100,14 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } else {
       //throw Exception("Falha ao fazer login");
+      setState(() {
+        isApiCallProcess = false;
+      });
       return false;
     }
+    setState(() {
+      isApiCallProcess = false;
+    });
     return false;
   }
 
@@ -156,9 +167,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               vertical: 12, horizontal: 50),
                           onPressed: () {
                             if (validateAndSave()) {
-                              setState(() {
-                                isApiCallProcess = true;
-                              });
+
+                              // setState(() {
+                              //   isApiCallProcess = true;
+                              // });
 
                               login().then((loginResult) {
                                 if (loginResult) {

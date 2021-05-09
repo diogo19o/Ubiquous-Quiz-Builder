@@ -124,6 +124,15 @@ class Services {
     });
   }
 
+  Future<Response> register(String username, String email, String password) {
+    return userService.registerUser({
+      "action": "add",
+      "username": username,
+      "email": email,
+      "password": password,
+    });
+  }
+
   factory Services() {
     return _services;
   }

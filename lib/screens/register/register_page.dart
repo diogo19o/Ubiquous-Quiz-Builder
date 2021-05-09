@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:ubiquous_quizz_builder/app_colors.dart';
+import 'package:ubiquous_quizz_builder/data/access_service_api.dart';
 import 'package:ubiquous_quizz_builder/data/data_source.dart';
 import 'package:ubiquous_quizz_builder/screens/login/login_page.dart';
 import 'package:ubiquous_quizz_builder/widgets/ProgressWidget.dart';
@@ -25,6 +27,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   String _username, _email;
   Digest _password, _confirmPassword;
+
+  Future<bool> register() async {
+
+    setState(() {
+      isApiCallProcess = true;
+    });
+
+    final response = await Provider.of<Services>(context, listen: false)
+        .register(_username, _email, _password.toString());
+
+    if (response.statusCode == 200 || response.statusCode == 400) {
+      if (json.decode(response.bodyString)['result'] == 0) {
+        Provider.of<Services>(context, listen: false).fetchData("utilizadores");
+        return true;
+      }
+    } else {
+      setState(() {
+        isApiCallProcess = false;
+      });
+      return false;
+    }
+    setState(() {
+      isApiCallProcess = false;
+    });
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +117,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         RaisedButton(
                           padding: EdgeInsets.symmetric(
                               vertical: 12, horizontal: 50),
-                          onPressed: () {},
+                          onPressed: () {
+                            if (validateAndSave()) {
+
+                              // setState(() {
+                              //   isApiCallProcess = true;
+                              // });
+
+                              register().then((registResult) {
+                                if (registResult) {
+                                  setState(() {
+                                    isApiCallProcess = false;
+                                  });
+
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginScreen()),
+                                  );
+                                } else {
+                                  setState(() {
+                                    isApiCallProcess = false;
+                                  });
+
+                                  final snackBar =
+                                  SnackBar(content: Text("Falha ao registar a conta"));
+                                  scaffoldKey.currentState
+                                      .showSnackBar(snackBar);
+                                }
+                              });
+                            }
+                          },
                           child: Text(
                             "Registar",
                             style: TextStyle(color: Colors.white, fontSize: 17),

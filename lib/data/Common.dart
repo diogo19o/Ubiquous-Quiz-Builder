@@ -5,7 +5,7 @@ class Common {
   //Local address to connect to WampServer
   // Do "ipconfig" on Windows cmd or
   // "ifconfig" on Linux, check your ipv4 Adress
-  // then change this localIp variable value
+  // then change this localIpv4 variable value
   static final String localIp = "192.168.1.70";
 
   //local path to content of "www" folder in WampServer directory
@@ -26,7 +26,7 @@ class Common {
       After changing this, run "flutter pub run build_runner build" on terminal
       to re-generate user_service_api.chopper.dart
    ****************************************************************************/
-  static final String URL_BASE_ADDRESS = baseRemoteServiceUrl;
+  static final String URL_BASE_ADDRESS = baseLocalServiceUrl;
   //------
 
 }
