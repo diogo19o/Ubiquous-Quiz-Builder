@@ -1,10 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
 import 'package:ubiquous_quizz_builder/data/data_source.dart';
-import 'package:ubiquous_quizz_builder/models/Questions.dart';
 import 'package:ubiquous_quizz_builder/models/pergunta.dart';
-import 'package:ubiquous_quizz_builder/models/resposta.dart';
 import 'package:ubiquous_quizz_builder/screens/quiz/score_screen.dart';
 
 // We use get package for our state management
@@ -22,7 +21,9 @@ class QuestionController extends GetxController
   // 3 -> Questionario
   int quizMode;
 
-  bool fail = false;
+  bool _fail = false;
+
+  int _score = 0, _timeMins, _timeSecs;
 
   AnimationController _animationController;
   Animation _animation;
@@ -66,19 +67,17 @@ class QuestionController extends GetxController
   // called immediately after the widget is allocated memory
   @override
   void onInit() {
-    int time,
-        timeMins =
-            dataSource.questionarioAtivo.questionarioDetails.timerMinutos,
-        timeSecs =
-            dataSource.questionarioAtivo.questionarioDetails.timerSegundos;
+    int time;
+    _timeMins = dataSource.questionarioAtivo.questionarioDetails.timerMinutos;
+    _timeSecs = dataSource.questionarioAtivo.questionarioDetails.timerSegundos;
 
-    if (timeMins != 0 || timeSecs != 0) {
-      time = (timeMins * 60 * 1000) + (timeSecs * 1000);
+    if (_timeMins != 0 || _timeSecs != 0) {
+      time = (_timeMins * 60 * 1000) + (_timeSecs * 1000);
     }
 
     // Encher progress bar em 30s
-    _animationController =
-        AnimationController(duration: Duration(minutes: timeMins,seconds: timeSecs), vsync: this);
+    _animationController = AnimationController(
+        duration: Duration(minutes: _timeMins, seconds: _timeSecs), vsync: this);
     _animation = Tween<double>(begin: 1, end: 0).animate(_animationController)
       ..addListener(() {
         // update like setState
@@ -109,7 +108,22 @@ class QuestionController extends GetxController
     _correctAns = correctAnswer;
     _selectedAns = selectedIndex;
 
-    if (_correctAns == _selectedAns) _numOfCorrectAns++;
+    if (_correctAns == _selectedAns) {
+      _numOfCorrectAns++;
+      int totalTime = (_timeMins * 60 + _timeSecs);
+      int timeLeft =
+      (totalTime - _animationController.value * totalTime).round();
+      //Se nao for modo contra relogio
+      if(quizMode != 1){
+        _score += (timeLeft * 10).toInt();
+      }else {
+        _score = (timeLeft * 10).toInt();
+      }
+
+    } else if (quizMode == 2) {
+      //Modo morte subita entao parar o questionario
+      _fail = true;
+    }
 
     //print("Duration: ${_animationController.lastElapsedDuration.inMilliseconds}");
     _answerTimes.add(_animationController.lastElapsedDuration.inMilliseconds);
@@ -125,7 +139,7 @@ class QuestionController extends GetxController
   }
 
   void nextQuestion() {
-    if (_questionNumber.value != _questions.length && !fail) {
+    if (_questionNumber.value != _questions.length && !_fail) {
       _isAnswered = false;
       _pageController.nextPage(
           duration: Duration(milliseconds: 250), curve: Curves.ease);
@@ -143,8 +157,17 @@ class QuestionController extends GetxController
       // Once timer is finish go to the next qn
       _animationController.forward().whenComplete(nextQuestion);
     } else {
+
+
+
+      List<dynamic> quizStatus = [
+        "Ja te entalaste",
+        _numOfCorrectAns,
+        questions.length,
+        _score
+      ];
       // Get package provide us simple way to navigate another page
-      Get.to(ScoreScreen(), arguments: "Ja te entalaste!");
+      Get.to(ScoreScreen(), arguments: quizStatus);
     }
   }
 

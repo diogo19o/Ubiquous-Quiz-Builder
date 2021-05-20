@@ -7,8 +7,7 @@ class ScoreScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     QuestionController _qnController = Get.put(QuestionController());
-    var test = Get.arguments;
-    String noCorretAnswers = "0";
+    List<dynamic> status = Get.arguments;
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
@@ -17,7 +16,7 @@ class ScoreScreen extends StatelessWidget {
             children: [
               Spacer(flex: 3),
               Text(
-                test,
+                status[0],
                 style: Theme.of(context)
                     .textTheme
                     .headline3
@@ -25,7 +24,23 @@ class ScoreScreen extends StatelessWidget {
               ),
               Spacer(),
               Text(
-                "Pontuação final",
+                "Respostas certas: ${status[1]}",
+                style: Theme.of(context)
+                    .textTheme
+                    .headline5
+                    .copyWith(color: AppColors.Orange),
+              ),
+              Spacer(),
+              Text(
+                "Respostas Erradas: ${status[2] - status[1]}",
+                style: Theme.of(context)
+                    .textTheme
+                    .headline5
+                    .copyWith(color: AppColors.Orange),
+              ),
+              Spacer(),
+              Text(
+                "Pontuação final - ${status[3]}",
                 style: Theme.of(context)
                     .textTheme
                     .headline3
