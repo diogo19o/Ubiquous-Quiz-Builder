@@ -11,7 +11,29 @@ class QuizScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Questionario questionario = DataSource().questionarioAtivo;
-    QuestionController _controller = Get.put(QuestionController());
+    QuestionController _controller;
+    switch(questionario.questionarioDetails.modo) {
+      case "classico": {
+        _controller = Get.put(QuestionController(quizMode: 0));
+      }
+      break;
+
+      case "contra_relogio": {
+        _controller = Get.put(QuestionController(quizMode: 1));
+      }
+      break;
+
+      case "morte_subita": {
+        _controller = Get.put(QuestionController(quizMode: 2));
+      }
+      break;
+
+      default: {
+        _controller = Get.put(QuestionController(quizMode: 3));
+      }
+      break;
+    }
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(

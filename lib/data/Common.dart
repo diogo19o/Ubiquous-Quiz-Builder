@@ -6,7 +6,7 @@ class Common {
   // Do "ipconfig" on Windows cmd or
   // "ifconfig" on Linux, check your ipv4 Adress
   // then change this localIpv4 variable value
-  static final String localIp = "192.168.1.70";
+  static final String localIp = "192.168.1.4";
 
   //local path to content of "www" folder in WampServer directory
   static final String baseLocalServiceUrl =

@@ -111,6 +111,9 @@ class Services {
   }
 
   void loadActiveUser(String username) {
+    if(dataSource.utilizadores.isEmpty){
+      fetchData("utilizadores");
+    }
     dataSource.setUtilizadorAtivo = dataSource.utilizadores
         .where((element) => element.nome == username)
         .single;
