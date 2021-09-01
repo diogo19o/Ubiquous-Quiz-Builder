@@ -9,7 +9,7 @@ part of 'resultado.dart';
 Result _$ResultFromJson(Map<String, dynamic> json) {
   return Result(
     id: Result._stringToInt(json['ResultadoID'] as String),
-    utilizadorID: Result._stringToInt(json['UtilizasdorID'] as String),
+    utilizadorID: Result._stringToInt(json['UtilizadorID'] as String),
     questionarioID: Result._stringToInt(json['QuestionarioID'] as String),
     respostasCorretas: Result._stringToInt(json['RespostasCertas'] as String),
     respostasErradas: Result._stringToInt(json['RespostasErradas'] as String),
@@ -21,7 +21,7 @@ Result _$ResultFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$ResultToJson(Result instance) => <String, dynamic>{
       'ResultadoID': Result._stringFromInt(instance.id),
-      'UtilizasdorID': Result._stringFromInt(instance.utilizadorID),
+      'UtilizadorID': Result._stringFromInt(instance.utilizadorID),
       'QuestionarioID': Result._stringFromInt(instance.questionarioID),
       'RespostasCertas': Result._stringFromInt(instance.respostasCorretas),
       'RespostasErradas': Result._stringFromInt(instance.respostasErradas),

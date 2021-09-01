@@ -2,10 +2,11 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:ubiquous_quizz_builder/app_colors.dart';
-import 'package:ubiquous_quizz_builder/data/access_service_api.dart';
+import 'package:ubiquous_quizz_builder/controllers/services_bloc.dart';
 import 'package:ubiquous_quizz_builder/data/data_source.dart';
 import 'package:ubiquous_quizz_builder/screens/login/login_page.dart';
 import 'package:ubiquous_quizz_builder/widgets/ProgressWidget.dart';
@@ -28,30 +29,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String _username, _email;
   Digest _password, _confirmPassword;
 
+  var snackBar = SnackBar(content: Text(""));
+
   Future<bool> register() async {
 
     setState(() {
       isApiCallProcess = true;
     });
 
-    final response = await Provider.of<Services>(context, listen: false)
+    final responseJson = await Provider.of<Services>(context, listen: false)
         .register(_username, _email, _password.toString());
 
-    if (response.statusCode == 200 || response.statusCode == 400) {
-      if (json.decode(response.bodyString)['result'] == 0) {
-        Provider.of<Services>(context, listen: false).fetchData("utilizadores");
-        return true;
-      }
+    print(responseJson);
+
+    if (responseJson['result'] == 0) {
+      await Provider.of<Services>(context, listen: false).fetchData("utilizadores");
+      setState(() {
+        isApiCallProcess = false;
+      });
+      return true;
     } else {
+      snackBar =
+          SnackBar(content: Text("Falha no login: Credenciais erradas"));
       setState(() {
         isApiCallProcess = false;
       });
       return false;
     }
-    setState(() {
-      isApiCallProcess = false;
-    });
-    return false;
   }
 
   @override
@@ -59,13 +63,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
     Size size = MediaQuery.of(context).size;
 
     return ProgressHUD(
-      child: _RegisterUISetup(context),
+      child: _registerUISetup(context),
       inAsyncCall: isApiCallProcess,
     );
   }
 
-  Widget _RegisterUISetup(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+  Widget _registerUISetup(BuildContext context) {
 
     return Scaffold(
       key: scaffoldKey,
@@ -108,7 +111,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         _buildUsernameField(),
                         SizedBox(height: 20),
                         _buildEmailField(),
-                        //SizedBox(height: size.height * 0.03),
                         SizedBox(height: 20),
                         _buildPasswordFieldFirst(),
                         SizedBox(height: 20),
@@ -119,28 +121,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               vertical: 12, horizontal: 50),
                           onPressed: () {
                             if (validateAndSave()) {
-
-                              // setState(() {
-                              //   isApiCallProcess = true;
-                              // });
-
                               register().then((registResult) {
                                 if (registResult) {
                                   setState(() {
                                     isApiCallProcess = false;
                                   });
-
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => LoginScreen()),
-                                  );
+                                  Get.off(() => LoginScreen(), arguments: true);
                                 } else {
                                   setState(() {
                                     isApiCallProcess = false;
                                   });
 
-                                  final snackBar =
+                                  snackBar =
                                   SnackBar(content: Text("Falha ao registar a conta"));
                                   scaffoldKey.currentState
                                       .showSnackBar(snackBar);

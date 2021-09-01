@@ -13,54 +13,65 @@ import 'option.dart';
 class QuestionCard extends StatelessWidget {
   const QuestionCard({
     Key key,
-    // it means we have to pass this
-    @required this.question,
+    @required this.pergunta,
   }) : super(key: key);
 
-  final Pergunta question;
+  final Pergunta pergunta;
 
   @override
   Widget build(BuildContext context) {
     QuestionController _controller = Get.put(QuestionController());
     final DataSource dataSource = DataSource();
-    List<Resposta> respostas = dataSource.questionarioAtivo.respostas.where((resposta) => resposta.perguntaID == question.id).toList();
-    int indexCorrectAnswer = respostas.indexWhere((resposta) => resposta.correta);
+    List<Resposta> respostas = dataSource.questionarioAtivo.respostas
+        .where((resposta) => resposta.perguntaID == pergunta.id)
+        .toList();
+    int indexCorrectAnswer =
+        respostas.indexWhere((resposta) => resposta.correta);
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-
-          margin: EdgeInsets.only(left: kDefaultPadding20,right: kDefaultPadding20,bottom: kDefaultPadding20),
-          padding: EdgeInsets.all(kDefaultPadding20),
-          decoration: BoxDecoration(
-            color: AppColors.PrimaryLight,
-            borderRadius: BorderRadius.circular(25),
-          ),
-          child: SingleChildScrollView(
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            margin: EdgeInsets.only(
+                left: kDefaultPadding20,
+                right: kDefaultPadding20,
+                bottom: kDefaultPadding20),
+            padding: EdgeInsets.all(kDefaultPadding20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(25),
+            ),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
+              //Comentar esta linha para expandir a caixa branca
               children: [
+                pergunta.nomeImagem != null
+                    ? Image.memory(dataSource.imageBytes)
+                    : SizedBox(),
+                SizedBox(height: kDefaultPadding20 / 2),
                 Text(
-                  question.texto,
+                  pergunta.texto,
                   style: Theme.of(context)
                       .textTheme
                       .headline6
-                      .copyWith(color: AppColors.SecondaryLight),
+                      .copyWith(color: AppColors.PrimaryMidBlue),
                 ),
-                SizedBox(height: kDefaultPadding20 / 2),
+                SizedBox(height: kDefaultPadding20/2),
                 ...List.generate(
                   respostas.length,
                   (index) => Option(
                     index: index,
                     text: respostas[index].texto,
-                    press: () => _controller.checkAns(question, index, indexCorrectAnswer),
+                    press: () => _controller.checkAns(
+                        pergunta, index, indexCorrectAnswer),
                   ),
                 ),
               ],
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

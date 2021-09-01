@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:ubiquous_quizz_builder/app_colors.dart';
 import 'package:ubiquous_quizz_builder/screens/listQuestionarios/list.dart';
+import 'package:ubiquous_quizz_builder/screens/profile/profile_page.dart';
+import 'package:ubiquous_quizz_builder/screens/ranking/home/ranking_page.dart';
 
 class CurvedBottomNavBar extends StatefulWidget {
   @override
@@ -17,10 +20,11 @@ class _CurvedBottomNavBarState extends State<CurvedBottomNavBar> {
     });
   }
 
-  Color paintBottomNavIcons(int index){
-    return  /*currentIndex == index
+  Color paintBottomNavIcons(int index) {
+    return /*currentIndex == index
         ? AppColors.Orange
-        : */AppColors.PrimaryMidBlue;
+        : */
+        AppColors.PrimaryMidBlue;
   }
 
   @override
@@ -35,7 +39,7 @@ class _CurvedBottomNavBarState extends State<CurvedBottomNavBar> {
             width: size.width,
             height: 80,
             child: Stack(
-              overflow: Overflow.visible,
+              //overflow: Overflow.visible,
               children: [
                 CustomPaint(
                   size: Size(size.width, 80),
@@ -45,7 +49,10 @@ class _CurvedBottomNavBarState extends State<CurvedBottomNavBar> {
                   heightFactor: 0.6,
                   child: FloatingActionButton(
                       backgroundColor: AppColors.Orange,
-                      child: Icon(MdiIcons.home, size: 30,),
+                      child: Icon(
+                        MdiIcons.home,
+                        size: 30,
+                      ),
                       elevation: 0.1,
                       onPressed: () {}),
                 ),
@@ -58,11 +65,7 @@ class _CurvedBottomNavBarState extends State<CurvedBottomNavBar> {
                       TextButton(
                           onPressed: () {
                             setBottomBarIndex(1);
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => ListQuestionarios("all"),
-                              ),
-                            );
+                            Get.to(() => ListQuestionarios("all"));
                           },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.end,
@@ -73,17 +76,15 @@ class _CurvedBottomNavBarState extends State<CurvedBottomNavBar> {
                                 size: 35,
                                 color: paintBottomNavIcons(1),
                               ),
-                              Text("Jogo", style: TextStyle(color: paintBottomNavIcons(1)))
+                              Text("Jogo",
+                                  style:
+                                      TextStyle(color: paintBottomNavIcons(1)))
                             ],
                           )),
                       TextButton(
                           onPressed: () {
                             setBottomBarIndex(2);
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => ListQuestionarios("questionario"),
-                              ),
-                            );
+                            Get.to(() => ListQuestionarios("questionario"));
                           },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -94,7 +95,9 @@ class _CurvedBottomNavBarState extends State<CurvedBottomNavBar> {
                                 size: 35,
                                 color: paintBottomNavIcons(2),
                               ),
-                              Text("Questionário", style: TextStyle(color: paintBottomNavIcons(2)))
+                              Text("Questionário",
+                                  style:
+                                      TextStyle(color: paintBottomNavIcons(2)))
                             ],
                           )),
                       Container(
@@ -103,6 +106,7 @@ class _CurvedBottomNavBarState extends State<CurvedBottomNavBar> {
                       TextButton(
                           onPressed: () {
                             setBottomBarIndex(3);
+                            Get.to(() => RankingScreen());
                           },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -113,12 +117,15 @@ class _CurvedBottomNavBarState extends State<CurvedBottomNavBar> {
                                 size: 35,
                                 color: paintBottomNavIcons(3),
                               ),
-                              Text("Ranking", style: TextStyle(color: paintBottomNavIcons(3)))
+                              Text("Ranking",
+                                  style:
+                                      TextStyle(color: paintBottomNavIcons(3)))
                             ],
                           )),
                       TextButton(
                           onPressed: () {
                             setBottomBarIndex(0);
+                            Get.to(() => ProfileScreen());
                           },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.end,
@@ -129,7 +136,9 @@ class _CurvedBottomNavBarState extends State<CurvedBottomNavBar> {
                                 size: 35,
                                 color: paintBottomNavIcons(0),
                               ),
-                              Text("Perfil", style: TextStyle(color: paintBottomNavIcons(0)))
+                              Text("Perfil",
+                                  style:
+                                      TextStyle(color: paintBottomNavIcons(0)))
                             ],
                           )),
                     ],

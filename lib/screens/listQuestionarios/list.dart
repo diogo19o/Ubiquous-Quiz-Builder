@@ -1,17 +1,15 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:chopper/chopper.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:ubiquous_quizz_builder/app_colors.dart';
-import 'package:ubiquous_quizz_builder/data/access_service_api.dart';
+import 'package:ubiquous_quizz_builder/data/data_source.dart';
+import 'package:ubiquous_quizz_builder/controllers/services_bloc.dart';
+import 'package:ubiquous_quizz_builder/data/api_response.dart';
 import 'package:ubiquous_quizz_builder/models/questionario_details.dart';
-import 'package:ubiquous_quizz_builder/screens/home/components/bottom_nav_bar.dart';
+import 'package:ubiquous_quizz_builder/screens/listQuestionarios/quiz_card.dart';
 import 'package:ubiquous_quizz_builder/screens/quiz/quiz_initial_page.dart';
-
-import '../single_post_test.dart';
 
 class ListQuestionarios extends StatefulWidget {
   String category;
@@ -26,24 +24,46 @@ class ListQuestionarios extends StatefulWidget {
 class _ListQuestionariosState extends State<ListQuestionarios> {
   _ListQuestionariosState(this.category);
 
+  DataSource _dataSource = DataSource();
+  Services _bloc;
+
+  List<QuestionarioDetails> questionarios;
+
+  bool date_asc = false, title_asc = false, dif_asc = false, ordenado = false;
+
   String category;
 
   Widget setPageTitle() {
     switch (category) {
       case "all":
-        return Text("Todos os modos de jogo");
+        return Text(
+          "Todos os modos de jogo",
+          style: TextStyle(color: Colors.white, fontSize: 25),
+        );
         break;
       case "questionario":
-        return Text("Modo Questionário");
+        return Text(
+          "Modo Questionário",
+          style: TextStyle(color: Colors.white, fontSize: 25),
+        );
         break;
       case "classico":
-        return Text("Modo Clássico");
+        return Text(
+          "Modo Clássico",
+          style: TextStyle(color: Colors.white, fontSize: 25),
+        );
         break;
       case "contra_relogio":
-        return Text("Modo Contra-Relógio");
+        return Text(
+          "Modo Contra-Relógio",
+          style: TextStyle(color: Colors.white, fontSize: 25),
+        );
         break;
       case "morte_subita":
-        return Text("Modo Morte Súbita");
+        return Text(
+          "Modo Morte Súbita",
+          style: TextStyle(color: Colors.white, fontSize: 25),
+        );
         break;
       default:
         return Text("Modo de Jogo");
@@ -51,65 +71,103 @@ class _ListQuestionariosState extends State<ListQuestionarios> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _bloc = Services();
+    _bloc.fetchQuizList();
+    ordenado = false;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.PrimaryDarkBlue,
-        elevation: 0,
-        title: setPageTitle(),
-      ),
-      body: Container(
-        decoration: BoxDecoration(gradient: AppColors.backgroudFade),
-        child: /*Stack(children: [*/_buildBody(context)/*, CurvedBottomNavBar()])*/,
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(MdiIcons.sortVariant),
-        onPressed: () async {
-          final response = await Provider.of<Services>(context, listen: false)
-              .userService
-              .loginUser({
-            "action": "login",
-            "username": "diogo",
-            "password": "47da36337c9140e2e9f1517a0ddeb0025e0c3310",
-          });
+        appBar: AppBar(
+          backgroundColor: AppColors.PrimaryDarkBlue,
+          elevation: 0,
+          title: setPageTitle(),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: () => Get.back(),
+          ),
+          centerTitle: true,
+        ),
+        body: Container(
+          decoration: BoxDecoration(gradient: AppColors.backgroudFade),
+          child: _buildBody(context),
+        ),
+        floatingActionButton: SpeedDial(
+          animatedIcon: AnimatedIcons.menu_close,
+          //animatedIconTheme: IconThemeData.fallback(),
+          children: [
+            SpeedDialChild(
+                child: dif_asc
+                    ? Icon(MdiIcons.sortNumericDescending)
+                    : Icon(MdiIcons.sortNumericAscending),
+                label: "Dificuldade",
+                onTap: () =>
+                    {dif_asc ? _orderBy("dif_dsc") : _orderBy("dif_asc")}),
+            SpeedDialChild(
+                child: title_asc
+                    ? Icon(MdiIcons.sortAlphabeticalDescending)
+                    : Icon(MdiIcons.sortAlphabeticalAscending),
+                label: "Titulo",
+                onTap: () => {
+                      title_asc ? _orderBy("title_dsc") : _orderBy("title_asc")
+                    }),
+            SpeedDialChild(
+                child: date_asc
+                    ? Icon(MdiIcons.sortCalendarDescending)
+                    : Icon(MdiIcons.sortCalendarAscending),
+                label: "Data",
+                onTap: () =>
+                    {date_asc ? _orderBy("date_dsc") : _orderBy("date_asc")}),
+          ],
+        ));
+  }
 
-          print(response.runtimeType);
-
-          print(
-              "Resultado do Login (0=sucesso): ${json.decode(response.bodyString)['result']}");
+  RefreshIndicator _buildBody(BuildContext context) {
+    return RefreshIndicator(
+      onRefresh: () => _bloc.fetchQuizList(),
+      child: StreamBuilder<ApiResponse<List<QuestionarioDetails>>>(
+        stream: _bloc.quizListStream.asBroadcastStream(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            switch (snapshot.data.status) {
+              case Status.LOADING:
+                ordenado = false;
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+                break;
+              case Status.COMPLETED:
+                return _buildQuestionarios();
+                break;
+              case Status.ERROR:
+                return AlertDialog(
+                  title: Text("Não foi possivel atualizar a lista"),
+                  actions: [
+                    TextButton(
+                        onPressed: () =>
+                            _bloc.fetchLocalQuizList() /*Get.back()*/,
+                        child: Text("Usar dados offline")),
+                    TextButton(
+                        onPressed: () => {_bloc.fetchQuizList()},
+                        child: Text("Tentar de novo")),
+                  ],
+                );
+                break;
+            }
+          }
+          return Container();
         },
       ),
     );
   }
 
-  FutureBuilder<Response> _buildBody(BuildContext context) {
-    // FutureBuilder is perfect for easily building UI when awaiting a Future
-    // Response is the type currently returned by all the methods of PostApiService
-    return FutureBuilder<Response>(
-      future: Provider.of<Services>(context, listen: false)
-          .userService
-          .getAll("questionarios"),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          // Snapshot's data is the Response
-          // You can see there's no type safety here (only List<dynamic>)
-          print(snapshot.data);
-          final List questionarios =
-              json.decode(snapshot.data.bodyString)['questionarios'];
-          return _buildQuestionarios(context, questionarios);
-        } else {
-          // Show a loading indicator while waiting for the posts
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
-    );
-  }
-
-  ListView _buildQuestionarios(BuildContext context, List posts) {
-    List<QuestionarioDetails> questionarios =
-        Provider.of<Services>(context, listen: false).dataSource.questionarios;
+  ListView _buildQuestionarios() {
+    if (!ordenado) {
+      questionarios = _dataSource.questionarios;
+    }
 
     if (category != "all") {
       List<QuestionarioDetails> questionariosFiltered = questionarios
@@ -127,29 +185,79 @@ class _ListQuestionariosState extends State<ListQuestionarios> {
       itemCount: questionarios.length,
       padding: EdgeInsets.all(8),
       itemBuilder: (context, index) {
-        return Card(
-          elevation: 4,
-          child: ListTile(
-            contentPadding: EdgeInsets.all(5),
-            title: Text(
-              questionarios[index].titulo,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            subtitle: Text("Dificuldade: ${questionarios[index].dificuldade}\nData de criação: ${questionarios[index].dataDeCriacao}"),
-            onTap: () =>
-                _navigateToPost(context, questionarios[index].id.toString()),
-          ),
-        );
+        return QuizCard(
+          questionario:questionarios[index],
+            onTap: () => _navigateToQuiz(context, questionarios[index].id.toString()));
       },
     );
   }
 
-  void _navigateToPost(BuildContext context, String id) {
+  void _navigateToQuiz(BuildContext context, String id) {
     Provider.of<Services>(context, listen: false).loadActiveQuiz(int.parse(id));
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => WelcomeScreen(),
-      ),
-    );
+    Get.to(() => QuizInitialPage());
+  }
+
+  void _orderBy(String type) {
+    switch (type) {
+      case "date_asc":
+        {
+          setState(() {
+            questionarios
+                .sort((x, y) => x.dataDeCriacao.compareTo(y.dataDeCriacao));
+            questionarios.forEach((element) {
+              print(element.titulo);
+            });
+          });
+          date_asc = true;
+        }
+        break;
+      case "date_dsc":
+        {
+          setState(() {
+            questionarios
+                .sort((x, y) => y.dataDeCriacao.compareTo(x.dataDeCriacao));
+            questionarios.forEach((element) {
+              print(element.titulo);
+            });
+          });
+          date_asc = false;
+        }
+        break;
+      case "dif_asc":
+        {
+          setState(() {
+            questionarios
+                .sort((x, y) => y.dificuldade.compareTo(x.dificuldade));
+          });
+          dif_asc = true;
+        }
+        break;
+      case "dif_dsc":
+        {
+          setState(() {
+            questionarios
+                .sort((x, y) => x.dificuldade.compareTo(y.dificuldade));
+          });
+          dif_asc = false;
+        }
+        break;
+      case "title_asc":
+        {
+          setState(() {
+            questionarios.sort((x, y) => x.titulo.compareTo(y.titulo));
+          });
+          title_asc = true;
+        }
+        break;
+      case "title_dsc":
+        {
+          setState(() {
+            questionarios.sort((x, y) => y.titulo.compareTo(x.titulo));
+          });
+          title_asc = false;
+        }
+        break;
+    }
+    ordenado = true;
   }
 }

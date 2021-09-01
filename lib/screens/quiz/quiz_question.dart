@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ubiquous_quizz_builder/app_colors.dart';
 import 'package:ubiquous_quizz_builder/controllers/question_controller.dart';
+import 'package:ubiquous_quizz_builder/controllers/services_bloc.dart';
 import 'package:ubiquous_quizz_builder/data/data_source.dart';
 import 'package:ubiquous_quizz_builder/models/Questions.dart';
 
@@ -11,6 +12,7 @@ class QuizScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Questionario questionario = DataSource().questionarioAtivo;
+    print(questionario.perguntas[0].texto);
     QuestionController _controller;
     switch(questionario.questionarioDetails.modo) {
       case "classico": {
@@ -39,7 +41,10 @@ class QuizScreen extends StatelessWidget {
       appBar: AppBar(
         // Flutter show the back button automatically
         backgroundColor: AppColors.PrimaryMidBlue,
-        iconTheme: IconThemeData(color: AppColors.Orange),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () => Get.back(),
+        ),
         elevation: 0,
         title: Text(
           questionario.questionarioDetails.titulo,

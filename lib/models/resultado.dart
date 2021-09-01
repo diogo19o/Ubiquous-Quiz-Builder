@@ -9,7 +9,7 @@ class Result /*extends StatelessWidget*/ {
 
   @JsonKey(name: 'ResultadoID', fromJson:_stringToInt, toJson: _stringFromInt)
   final int id;
-  @JsonKey(name: 'UtilizasdorID', fromJson:_stringToInt, toJson: _stringFromInt)
+  @JsonKey(name: 'UtilizadorID', fromJson:_stringToInt, toJson: _stringFromInt)
   final int utilizadorID;
   @JsonKey(name: 'QuestionarioID', fromJson:_stringToInt, toJson: _stringFromInt)
   final int questionarioID;

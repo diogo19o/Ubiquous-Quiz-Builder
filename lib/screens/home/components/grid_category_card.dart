@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:ubiquous_quizz_builder/app_colors.dart';
 import 'package:ubiquous_quizz_builder/constants.dart';
 
@@ -40,38 +41,44 @@ class GridCategoryCard extends StatelessWidget {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(15),
-              bottomRight: Radius.circular(35),
-              topLeft: Radius.circular(35),
-              topRight: Radius.circular(15)),
-          gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [
-              AppColors.PrimaryMidBlue,
-              AppColors.Orange,
-            ],
-          )
-        ),
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(15),
+                bottomRight: Radius.circular(35),
+                topLeft: Radius.circular(35),
+                topRight: Radius.circular(15)),
+            gradient: index == 0 ? LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [
+                Colors.lightGreen,
+                Colors.lightGreen,
+              ],
+            ) : index == 1 ? LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [
+                Colors.orangeAccent,
+                Colors.orangeAccent,
+              ],
+            ) : index == 2 ? LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [
+                Colors.deepOrange[800],
+                Colors.deepOrange[800],
+              ],
+            ) : LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [
+                Colors.blueAccent,
+                Colors.blueAccent,
+              ],
+            )),
         child: Stack(
           children: [
             Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(15),
-                    bottomRight: Radius.circular(35),
-                    topLeft: Radius.circular(35),
-                    topRight: Radius.circular(15)),
-                color: kCardInfoBG.withOpacity(0.6),
-              ),
-              /*child: Image.asset(
-                "assets/images/place3.jpg",
-                width: double.infinity,
-                height: 200,
-
-                fit: BoxFit.cover,
-              ),*/
+              decoration: cardBackgroundDecoration,
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -88,6 +95,7 @@ class GridCategoryCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
                                 categories[index],
@@ -104,7 +112,39 @@ class GridCategoryCard extends StatelessWidget {
                   ],
                 ),
               ],
-            )
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: index == 3 ? EdgeInsets.only(top: 5.0) : EdgeInsets.only(top: 12.0),
+                  child: index == 0
+                      ? Icon(
+                          MdiIcons.gamepad,
+                          color: Colors.white,
+                          size: 50,
+                        )
+                      : index == 1
+                          ? Icon(
+                              MdiIcons.alarm,
+                              color: Colors.white,
+                              size: 50,
+                            )
+                          : index == 2
+                              ? Icon(
+                                  MdiIcons.skull,
+                                  color: Colors.white,
+                                  size: 50,
+                                )
+                              : Icon(
+                                  MdiIcons.viewModule,
+                                  color: Colors.white,
+                                  size: 65,
+                                ),
+                ),
+              ],
+            ),
           ],
         ),
       ),

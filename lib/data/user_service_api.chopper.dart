@@ -24,6 +24,13 @@ class _$UserService extends UserService {
   }
 
   @override
+  Future<Response<dynamic>> getImage(String imageName) {
+    final $url = 'teste.php/?action=imagem&imageName=$imageName';
+    final $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
   Future<Response<dynamic>> loginUser(Map<String, String> body) {
     final $url = 'user.php';
     final $headers = {'content-type': 'application/x-www-form-urlencoded'};
@@ -36,6 +43,16 @@ class _$UserService extends UserService {
   @override
   Future<Response<dynamic>> registerUser(Map<String, String> body) {
     final $url = 'user.php';
+    final $headers = {'content-type': 'application/x-www-form-urlencoded'};
+    final $body = body;
+    final $request =
+        Request('POST', $url, client.baseUrl, body: $body, headers: $headers);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> sendResults(Map<String, String> body) {
+    final $url = 'teste.php/?action=resultado';
     final $headers = {'content-type': 'application/x-www-form-urlencoded'};
     final $body = body;
     final $request =

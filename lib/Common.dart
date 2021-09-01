@@ -1,12 +1,10 @@
-import 'package:flutter/services.dart';
-
 class Common {
 
   //Local address to connect to WampServer
   // Do "ipconfig" on Windows cmd or
   // "ifconfig" on Linux, check your ipv4 Adress
   // then change this localIpv4 variable value
-  static final String localIp = "192.168.1.4";
+  static final String localIp = "192.168.43.62";
 
   //local path to content of "www" folder in WampServer directory
   static final String baseLocalServiceUrl =
@@ -16,7 +14,6 @@ class Common {
   static final String baseRemoteServiceUrl = "https://php-ubiquous-quiz-builder.herokuapp.com/";
 
   //DON'T FORGET TO CHANGE THIS!
-  // ignore: slash_for_doc_comments
   /********************************* IMPORTANT *********************************
       Change variable URL_BASE_ADDRESS down below if using remote server instead of local
 

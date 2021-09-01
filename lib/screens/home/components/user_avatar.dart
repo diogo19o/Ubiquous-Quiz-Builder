@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:ubiquous_quizz_builder/screens/profile/profile_page.dart';
 
 class UserAvatar extends StatelessWidget {
   const UserAvatar({
@@ -9,7 +11,7 @@ class UserAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       icon: ClipOval(child: Image.asset('assets/images/avatar.png')),
-      onPressed: () {}
+      onPressed: () => Get.to(() => ProfileScreen())
     );
   }
 }

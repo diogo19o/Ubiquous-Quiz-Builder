@@ -1,10 +1,11 @@
 import 'dart:convert';
-
 import 'package:crypto/crypto.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:ubiquous_quizz_builder/app_colors.dart';
-import 'package:ubiquous_quizz_builder/data/access_service_api.dart';
+import 'package:ubiquous_quizz_builder/controllers/services_bloc.dart';
 import 'package:ubiquous_quizz_builder/data/data_source.dart';
 import 'package:ubiquous_quizz_builder/screens/home/home_page.dart';
 import 'package:ubiquous_quizz_builder/screens/register/register_page.dart';
@@ -26,6 +27,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   String _username;
   Digest _password;
+
+  bool fromRegister = Get.arguments;
+  var snackBar = SnackBar(content: Text(""));
 
   Widget _buildUsernameField() {
     return TextFormField(
@@ -85,26 +89,52 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<bool> login() async {
-
     setState(() {
       isApiCallProcess = true;
     });
 
-    final response = await Provider.of<Services>(context, listen: false)
-        .login(_username, _password.toString());
+    var responseJson;
 
-    if (response.statusCode == 200 || response.statusCode == 400) {
-      if (json.decode(response.bodyString)['result'] == 0) {
+    try {
+      responseJson = await Provider.of<Services>(context, listen: false)
+          .login(_username, _password.toString());
+
+      if (responseJson['result'] == 0) {
         Provider.of<Services>(context, listen: false).loadActiveUser(_username);
+        print(dataSource.questionarios.length);
+        print(dataSource.utilizadores.length);
+        print(dataSource.utilizadoresRanking.length);
+        await Provider.of<Services>(context, listen: false).fetchData("all");
+        print(dataSource.questionarios.length);
+        print(dataSource.utilizadores.length);
+        print(dataSource.utilizadoresRanking.length);
+        setState(() {
+          isApiCallProcess = false;
+        });
         return true;
+      } else if (responseJson['result'] == 3) {
+        snackBar = SnackBar(
+            content: Text("Conta de admin não tem acesso à aplicação"));
+        setState(() {
+          isApiCallProcess = false;
+        });
+        return false;
+      } else {
+        snackBar =
+            SnackBar(content: Text("Falha no login: Credenciais erradas"));
+        setState(() {
+          isApiCallProcess = false;
+        });
+        return false;
       }
-    } else {
-      //throw Exception("Falha ao fazer login");
-      setState(() {
-        isApiCallProcess = false;
-      });
-      return false;
+    } catch (e) {
+      print(
+          "----------\nProblema na ligação ao servidor: ${e.toString()} \nVerifique se tem o caminho correto para o servidor no ficheiro: Common.dart\n----------");
     }
+
+    snackBar = SnackBar(
+        content: Text("Falha no login: Verifique a sua ligação à internet"));
+
     setState(() {
       isApiCallProcess = false;
     });
@@ -113,6 +143,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    /*if(fromRegister != null && fromRegister){R
+      snackBar =
+          SnackBar(content: Text("Conta registada com sucesso"));
+      scaffoldKey.currentState
+          .showSnackBar(snackBar);
+    }*/
+
     return ProgressHUD(
       child: _LoginUISetup(context),
       inAsyncCall: isApiCallProcess,
@@ -167,11 +204,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               vertical: 12, horizontal: 50),
                           onPressed: () {
                             if (validateAndSave()) {
-
-                              // setState(() {
-                              //   isApiCallProcess = true;
-                              // });
-
                               login().then((loginResult) {
                                 if (loginResult) {
                                   setState(() {
@@ -188,8 +220,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                     isApiCallProcess = false;
                                   });
 
-                                  final snackBar =
-                                      SnackBar(content: Text("Falha ao entrar"));
                                   scaffoldKey.currentState
                                       .showSnackBar(snackBar);
                                 }
@@ -210,12 +240,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               horizontal: 40, vertical: 10),
                           child: GestureDetector(
                               onTap: () => {
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            RegisterScreen()))
-                              },
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                RegisterScreen()))
+                                  },
                               child: RichText(
                                 text: TextSpan(
                                   children: <TextSpan>[

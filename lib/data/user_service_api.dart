@@ -1,20 +1,24 @@
 import 'dart:io';
 
 import 'package:chopper/chopper.dart';
-import 'file:///C:/Users/diogo/AndroidStudioProjects/ubiquous_quizz_builder/lib/data/model_converter.dart';
 import 'package:http/io_client.dart' as http;
 
-import 'Common.dart';
+import '../Common.dart';
 
 part 'user_service_api.chopper.dart';
 
-@ChopperApi(/*baseUrl: '/teste.php'*/)
+@ChopperApi()
 abstract class UserService extends ChopperService {
 
   @Get(path: 'teste.php/?action={action}')
   Future<Response> getAll(
     @Path('action') String action,
   );
+
+  @Get(path: 'teste.php/?action=imagem&imageName={imageName}')
+  Future<Response> getImage(
+      @Path('imageName') String imageName,
+      );
 
   @Post(path: 'user.php', headers: {contentTypeKey: formEncodedHeaders})
   Future<Response> loginUser(
@@ -26,11 +30,16 @@ abstract class UserService extends ChopperService {
       @Body() Map<String, String> body,
       );
 
+  @Post(path: 'teste.php/?action=resultado', headers: {contentTypeKey: formEncodedHeaders})
+  Future<Response> sendResults(
+      @Body() Map<String, String> body,
+      );
+
   static UserService create() {
     final client = ChopperClient(
-      /*client: http.IOClient(
-        HttpClient()..connectionTimeout = const Duration(seconds: 10),
-      ),*/
+      client: http.IOClient(
+        HttpClient()..connectionTimeout = const Duration(seconds: 4),
+      ),
       baseUrl: Common.URL_BASE_ADDRESS,
       interceptors: [HttpLoggingInterceptor()],
       services: [

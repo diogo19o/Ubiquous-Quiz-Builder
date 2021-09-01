@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import 'imagem.dart';
+
 part 'pergunta.g.dart';
 
 @JsonSerializable()
@@ -14,11 +16,15 @@ class Pergunta /*extends StatelessWidget*/ {
   final int resposta;
   @JsonKey(name: 'QuestionarioID', fromJson:_stringToInt, toJson: _stringFromInt)
   final int questionarioID;
+  @JsonKey(name: 'NomeImagem')
+  final String nomeImagem;
+  @JsonKey(ignore: true)
+  Imagem imagem;
 
   //final int respostaID;
 
   Pergunta(
-  {this.id, this.texto, this.resposta, this.questionarioID});
+  {this.id, this.texto, this.resposta, this.questionarioID,this.nomeImagem});
 
   factory Pergunta.fromJson(Map<String, dynamic> json) => _$PerguntaFromJson(json);
 

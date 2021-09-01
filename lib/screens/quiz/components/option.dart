@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:ubiquous_quizz_builder/app_colors.dart';
 import 'package:ubiquous_quizz_builder/controllers/question_controller.dart';
 
 import '../../../constants.dart';
@@ -22,14 +23,20 @@ class Option extends StatelessWidget {
         builder: (questionController) {
           Color getTheRightColor() {
             if (questionController.isAnswered) {
-              if (index == questionController.correctAns) {
-                return Colors.greenAccent;
-              } else if (index == questionController.selectedAns &&
-                  questionController.selectedAns != questionController.correctAns) {
-                return Colors.red;
+              if(questionController.quizMode != 3){
+                if (index == questionController.correctAns) {
+                  return Colors.greenAccent;
+                } else if (index == questionController.selectedAns &&
+                    questionController.selectedAns != questionController.correctAns) {
+                  return Colors.red;
+                }
+              }else{
+                if(index == questionController.selectedAns){
+                  return Colors.teal;
+                }
               }
             }
-            return Colors.white;
+            return AppColors.PrimaryDarkBlue;
           }
 
           IconData getTheRightIcon() {
@@ -59,13 +66,13 @@ class Option extends StatelessWidget {
                     height: 26,
                     width: 26,
                     decoration: BoxDecoration(
-                      color: getTheRightColor() == Colors.white
+                      color: getTheRightColor() == AppColors.PrimaryDarkBlue
                           ? Colors.transparent
                           : getTheRightColor(),
                       borderRadius: BorderRadius.circular(50),
                       border: Border.all(color: getTheRightColor()),
                     ),
-                    child: getTheRightColor() == Colors.white
+                    child: getTheRightColor() == AppColors.PrimaryDarkBlue
                         ? null
                         : Icon(getTheRightIcon(), size: 16),
                   )

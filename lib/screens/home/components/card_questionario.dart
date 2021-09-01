@@ -21,10 +21,13 @@ class QuestionarioCard extends StatelessWidget {
       child: InkWell(
         onTap: () {tapEvent(questionario.id.toString(),MainContext);},
         child: Container(
-          margin: EdgeInsets.only(right: 30),
+          margin: EdgeInsets.symmetric(horizontal: 15),
           width: double.infinity,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(30), bottomRight: Radius.circular(30), bottomLeft: Radius.circular(10), topRight: Radius.circular(10)),
+              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15),
+                  bottomRight: Radius.circular(35),
+                  topLeft: Radius.circular(35),
+                  topRight: Radius.circular(15)),
               image: DecorationImage(
                   image: AssetImage('assets/images/place1.jpg'),
                   fit: BoxFit.cover)),

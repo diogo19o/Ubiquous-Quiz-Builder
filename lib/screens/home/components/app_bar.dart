@@ -10,7 +10,7 @@ AppBar buildAppBar(BuildContext context, {String title, List<Widget> actions, Wi
     elevation: 0,
     title: Text(
       title,
-      style: GoogleFonts.merriweather(
+      style: TextStyle(
         color: Colors.amber[700],
         fontSize: 27,
       ),

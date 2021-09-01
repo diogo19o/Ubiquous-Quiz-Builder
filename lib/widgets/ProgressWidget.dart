@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ubiquous_quizz_builder/app_colors.dart';
 
 class ProgressHUD extends StatelessWidget {
   final Widget child;
@@ -19,7 +18,7 @@ class ProgressHUD extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> widgetList = new List<Widget>();
+    List<Widget> widgetList = <Widget>[];
     Widget addBackgroud = child;
     widgetList.add(addBackgroud);
     if (inAsyncCall) {
