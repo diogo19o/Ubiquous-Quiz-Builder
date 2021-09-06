@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="lig.tfc.ubiquous_quizz_builder">
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="ubiquous_quizz_builder"
         android:icon="@mipmap/ic_launcher"

@@ -2,9 +2,9 @@ import 'dart:typed_data';
 
 class Imagem {
 
-  int _idPergunta;
-  Uint8List _imagemBytes;
+  int idPergunta;
+  Uint8List imagemBytes;
 
-  Imagem(this._idPergunta,this._imagemBytes);
+  Imagem(this.idPergunta,this.imagemBytes);
 
 }

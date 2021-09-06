@@ -48,6 +48,7 @@ dependencies:
   rxdart: ^0.27.1
   mobx_codegen: ^1.1.2
   font_awesome_flutter: ^9.1.0
+  email_validator: ^2.0.1
 
 dev_dependencies:
   flutter_test:

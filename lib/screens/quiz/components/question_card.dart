@@ -47,7 +47,7 @@ class QuestionCard extends StatelessWidget {
               //Comentar esta linha para expandir a caixa branca
               children: [
                 pergunta.nomeImagem != null
-                    ? Image.memory(dataSource.imageBytes)
+                    ? Image.memory(pergunta.imagem.imagemBytes)
                     : SizedBox(),
                 SizedBox(height: kDefaultPadding20 / 2),
                 Text(

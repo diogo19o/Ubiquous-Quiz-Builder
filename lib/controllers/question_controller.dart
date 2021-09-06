@@ -5,9 +5,8 @@ import 'package:get/state_manager.dart';
 import 'package:ubiquous_quizz_builder/controllers/services_bloc.dart';
 import 'package:ubiquous_quizz_builder/data/data_source.dart';
 import 'package:ubiquous_quizz_builder/models/pergunta.dart';
-import 'package:ubiquous_quizz_builder/models/questionario_details.dart';
-import 'package:ubiquous_quizz_builder/models/ranking_user.dart';
 import 'package:ubiquous_quizz_builder/models/resultado.dart';
+import 'package:ubiquous_quizz_builder/models/utilizador.dart';
 import 'package:ubiquous_quizz_builder/screens/quiz/score_screen.dart';
 
 // We use get package for our state management
@@ -74,6 +73,10 @@ class QuestionController extends GetxController
 
   bool _newHighScore = false;
 
+  int totalTime = 0;
+
+  int maxScorePossible = 0;
+
   // called immediately after the widget is allocated memory
   @override
   void onInit() {
@@ -131,7 +134,7 @@ class QuestionController extends GetxController
     if (quizMode != 3) {
       if (_correctAns == _selectedAns) {
         _numOfCorrectAns++;
-        int totalTime = (_timeMins * 60 + _timeSecs);
+        totalTime = (_timeMins * 60 + _timeSecs);
         int timeLeft =
             (totalTime - _animationController.value * totalTime).round();
         //Se nao for modo contra relogio
@@ -145,16 +148,15 @@ class QuestionController extends GetxController
         _fail = true;
       }
 
-      //print("Duration: ${_animationController.lastElapsedDuration.inMilliseconds}");
       _answerTimes.add(_animationController.lastElapsedDuration.inMilliseconds);
 
-      // It will stop the counter
+      // Stop the counter
       _animationController.stop();
     }
 
     update();
 
-    // Once user select an ans after 3s it will go to the next qn
+    // Assim que seleciona uma resposta espera X segundos ate avancar de pergunta
     Future.delayed(Duration(seconds: 5), () {
       nextQuestion();
     });
@@ -167,30 +169,26 @@ class QuestionController extends GetxController
           duration: Duration(milliseconds: 250), curve: Curves.ease);
 
       if (quizMode != 3) {
-        if (quizMode == 1) {
-          // Contra-Relógio
+        if (quizMode == 1) { // Contra-Relógio
           _animationController.repeat();
-        } else {
-          // Classico
-          // Morte subita
-          // Reset the counter
+        } else {// Classico / Morte subita
+          // Reset counter
           _animationController.reset();
         }
 
-        // Once timer is finish go to the next qn
+        // Quando o timer acabar avanca para a proxima pergunta
         _animationController.forward().whenComplete(nextQuestion);
       }
-    } else {
+    } else { //Acabou as perguntas
 
       Map<String, String> mapResultado;
       Map<String, dynamic> quizStatus;
 
-      //Se nao for modo questionario verifica se bateu o recorde pessoal
-      if (quizMode != 3) {
-        UtilizadorRanking user = dataSource.utilizadoresRanking
-            .singleWhere((element) =>
-                element.utilizador.id == dataSource.utilizadorAtivo.id,
-            orElse: () => UtilizadorRanking(dataSource.utilizadorAtivo));
+
+      if (quizMode != 3) { //Status a enviar para o Score Screen no modo Classico, Morte Subita e Contra Relogio
+        Utilizador user = dataSource.utilizadorAtivo;
+
+        //-------- Verifica se bateu o recorde pessoal --------
         List<Result> tempResults;
         switch (quizMode) {
           case 0:
@@ -221,21 +219,27 @@ class QuestionController extends GetxController
 
         if (tempResults.isNotEmpty) {
           tempResults.sort((a, b) => b.score.compareTo(a.score));
-          if (_score > tempResults[0].score) _newHighScore = true;
+          if (_score > tempResults[0].score && _score != 0) _newHighScore = true;
         } else if (tempResults.isEmpty) {
           _newHighScore = true;
         } else {
           _newHighScore = false;
         }
+
+        //---------------------------------------------------
+
+        //Status a enviar para o Score Screen
         quizStatus = {
-          "mensagem": "Ja te entalaste",
+          "mensagem": getRightMessageBasedInScore(),
           "certas": _numOfCorrectAns,
           "erradas": questions.length - _numOfCorrectAns,
           "total": questions.length,
           "score": _score,
+          "maxScore": maxScorePossible,
           "recordePessoal": _newHighScore
         };
 
+        //Dados para o servidor
         mapResultado = {
           "certas": _numOfCorrectAns.toString(),
           "erradas": (questions.length - _numOfCorrectAns).toString(),
@@ -245,7 +249,20 @@ class QuestionController extends GetxController
           dataSource.questionarioAtivo.questionarioDetails.id.toString(),
           "nomeUtilizador": dataSource.utilizadorAtivo.nome
         };
-      } else {
+
+
+      } else { //Status a enviar para o Score Screen no modo Questionario
+
+        quizStatus = {
+          "mensagem": getRightMessageBasedInScore(),
+          "certas": questions.length.toString(),
+          "erradas": "0",
+          "total": questions.length,
+          "score": "0",
+          "maxScore": maxScorePossible,
+          "recordePessoal": _newHighScore,
+        };
+
         mapResultado = {
           "certas": questions.length.toString(),
           "erradas": "0",
@@ -255,15 +272,6 @@ class QuestionController extends GetxController
           dataSource.questionarioAtivo.questionarioDetails.id.toString(),
           "nomeUtilizador": dataSource.utilizadorAtivo.nome
         };
-
-        quizStatus = {
-          "mensagem": "Respondeste ao questionário",
-          "certas": questions.length.toString(),
-          "erradas": "0",
-          "total": questions.length,
-          "score": "0",
-          "recordePessoal": _newHighScore,
-        };
       }
 
       _services.sendResultToServer(mapResultado);
@@ -271,6 +279,36 @@ class QuestionController extends GetxController
       // Get package provide us simple way to navigate another page
       Get.off(() => ScoreScreen(), arguments: quizStatus);
     }
+  }
+
+  String getRightMessageBasedInScore(){
+    if(quizMode != 3) {
+      if (quizMode != 1) {
+        maxScorePossible = (totalTime * 10);
+        if (numOfCorrectAns == 0) {
+          return "Este não correu muito bem, mas não desistas!";
+        } else if (numOfCorrectAns < questions.length / 2) {
+          return "Bora lá, tu consegues melhor.";
+        }
+        else if (numOfCorrectAns >
+            questions.length / 2) { // Se acertou mais de metade
+          return "Boa! Conseguiste acertar mais de metade do questionario.";
+        }
+        else if (numOfCorrectAns == questions.length &&
+            _score < (maxScorePossible - (50 * questions.length))) {
+          //Se acertou todas as perguntas porém demorou mais de 5 segundos (50 pontos perdidos por pergunta) por pergunta
+          return "Muito bem! Conseguiste acertar todas as perguntas, agora tenta ser mais rápido.";
+        }
+        else if (numOfCorrectAns == questions.length &&
+            _score < (maxScorePossible - (20 * questions.length))) {
+          //Se acertou todas as perguntas porém demorou mais de 5 segundos (50 pontos perdidos por pergunta) por pergunta
+          return "Incrivel! Estas mesmo quase a obter a pontuação máxima.";
+        }
+      } else {
+        return "Fim do Contra Relogio";
+      }
+    }
+      return "Fim do questionário!";
   }
 
   void updateTheQnNum(int index) {

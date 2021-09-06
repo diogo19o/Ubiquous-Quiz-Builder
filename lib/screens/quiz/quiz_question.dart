@@ -5,6 +5,7 @@ import 'package:ubiquous_quizz_builder/controllers/question_controller.dart';
 import 'package:ubiquous_quizz_builder/controllers/services_bloc.dart';
 import 'package:ubiquous_quizz_builder/data/data_source.dart';
 import 'package:ubiquous_quizz_builder/models/Questions.dart';
+import 'package:ubiquous_quizz_builder/screens/quiz/quiz_initial_page.dart';
 
 import 'components/body.dart';
 
@@ -36,6 +37,11 @@ class QuizScreen extends StatelessWidget {
       break;
     }
 
+    exitQuiz(){
+      Get.back();
+      Get.back();
+    }
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -43,7 +49,17 @@ class QuizScreen extends StatelessWidget {
         backgroundColor: AppColors.PrimaryMidBlue,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
-          onPressed: () => Get.back(),
+          onPressed: () => showDialog(context: context, builder: (context) => AlertDialog(
+            title: Text("Se sair perde o progresso total deste questionário. \n\nTem a certeza?"),
+            actions: [
+              TextButton(
+                  onPressed: () => exitQuiz() /*Get.back()*/,
+                  child: Text("Sair")),
+              TextButton(
+                  onPressed: () => {Get.back()},
+                  child: Text("Continuar")),
+            ],
+          ))
         ),
         elevation: 0,
         title: Text(

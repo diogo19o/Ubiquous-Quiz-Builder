@@ -10,11 +10,9 @@ import 'package:ubiquous_quizz_builder/models/Questions.dart';
 import 'package:ubiquous_quizz_builder/models/imagem.dart';
 import 'package:ubiquous_quizz_builder/models/pergunta.dart';
 import 'package:ubiquous_quizz_builder/models/questionario_details.dart';
-import 'package:ubiquous_quizz_builder/models/ranking_user.dart';
 import 'package:ubiquous_quizz_builder/models/resposta.dart';
 import 'package:ubiquous_quizz_builder/models/resultado.dart';
 import 'package:ubiquous_quizz_builder/models/utilizador.dart';
-
 import '../data/api_response.dart';
 import 'app_exceptions.dart';
 
@@ -34,7 +32,7 @@ class Services {
       BehaviorSubject<ApiResponse<List<QuestionarioDetails>>>();
 
   StreamController _quizResultsController =
-      BehaviorSubject<ApiResponse<List<UtilizadorRanking>>>();
+      BehaviorSubject<ApiResponse<List<Utilizador>>>();
 
   StreamSink<ApiResponse<List<QuestionarioDetails>>> get quizListSink =>
       _quizListController.sink;
@@ -42,10 +40,10 @@ class Services {
   Stream<ApiResponse<List<QuestionarioDetails>>> get quizListStream =>
       _quizListController.stream;
 
-  StreamSink<ApiResponse<List<UtilizadorRanking>>> get quizResultsSink =>
+  StreamSink<ApiResponse<List<Utilizador>>> get quizResultsSink =>
       _quizResultsController.sink;
 
-  Stream<ApiResponse<List<UtilizadorRanking>>> get quizResultsStream =>
+  Stream<ApiResponse<List<Utilizador>>> get quizResultsStream =>
       _quizResultsController.stream;
 
   dispose() {
@@ -53,12 +51,14 @@ class Services {
     _quizResultsController?.close();
   }
 
-  sendResultToServer(Map<String, dynamic> data) async {
+  sendResultToServer(Map<String, dynamic> resultData) async {
     try {
-      final response = await userService.sendResults(data);
+      await userService.sendResults(resultData);
     } on SocketException {
+      dataSource.resultsToFetch.add(resultData);
       throw FetchDataException('No Internet connection to the Server');
     } catch (e) {
+      dataSource.resultsToFetch.add(resultData);
       throw e;
     }
   }
@@ -99,8 +99,7 @@ class Services {
     quizResultsSink.add(ApiResponse.loading('Fetching Resultados'));
     try {
       await fetchData("resultados");
-      quizResultsSink
-          .add(ApiResponse.completed(dataSource.utilizadoresRanking));
+      quizResultsSink.add(ApiResponse.completed(dataSource.utilizadores));
     } catch (e) {
       quizResultsSink.add(ApiResponse.error(e.toString()));
       print(e);
@@ -109,8 +108,7 @@ class Services {
 
   fetchLocalResultsList() {
     if (dataSource.questionarios.isNotEmpty) {
-      quizResultsSink
-          .add(ApiResponse.completed(dataSource.utilizadoresRanking));
+      quizResultsSink.add(ApiResponse.completed(dataSource.utilizadores));
     } else {
       quizResultsSink
           .add(ApiResponse.error("Não existe nenhum resultado carregado!"));
@@ -130,11 +128,8 @@ class Services {
     try {
       final response = await userService.getImage(imageName);
       responseJson = _returnResponse(response);
-      print(responseJson["imagem"]);
       const Base64Codec base64 = Base64Codec();
       Uint8List imageBytes = base64.decode(responseJson["imagem"]);
-      dataSource.imageBytes = imageBytes;
-      dataSource.connected = true;
       Imagem imagem = Imagem(idPergunta, imageBytes);
       return imagem;
     } on SocketException {
@@ -155,6 +150,12 @@ class Services {
         responseJson = _returnResponse(response);
       }
       await computeRequest(dataType, responseJson);
+      if (dataSource.resultsToFetch.isNotEmpty) {
+        for (Map<String, dynamic> result in dataSource.resultsToFetch) {
+          sendResultToServer(result);
+          dataSource.resultsToFetch.remove(result);
+        }
+      }
     } on SocketException {
       throw FetchDataException('No Internet connection to the Server');
     } catch (e) {
@@ -192,6 +193,7 @@ class Services {
           dataSource.setResultados = List<Result>.from(mapData[dataType]
               .map((resultadosJSON) => Result.fromJson(resultadosJSON)));
           joinUsersResults();
+          quizResultsSink.add(ApiResponse.completed(dataSource.utilizadores));
         }
         break;
 
@@ -226,67 +228,27 @@ class Services {
 
   void joinUsersResults() {
     for (var result in dataSource.resultados) {
-      UtilizadorRanking userRankExistente = dataSource.utilizadoresRanking
-          .singleWhere(
-              (element)=> element.utilizador.id == result.utilizadorID,
-              orElse: () => null);
+      Utilizador userExistente = dataSource.utilizadores.singleWhere(
+          (element) => element.id == result.utilizadorID,
+          orElse: () => null);
 
-      if (userRankExistente != null) {
-        //Ja existe um utilizador na lista de ranking com o id do user
+      if (userExistente != null) {
+        //Existe um user que respondeu a este questionario
 
-        List<Result> resultados = userRankExistente.resultadosC +
-            userRankExistente.resultadosMS +
-            userRankExistente.resultadosCR;
+        List<Result> resultados = userExistente.resultadosC +
+            userExistente.resultadosMS +
+            userExistente.resultadosCR;
 
         if (!resultados.contains(result)) {
-          addResultToRightList(result, userRankExistente);
-          /*
-          print(
-              "Ja existe id: ${userRankExistente.utilizador.id}, nome: ${userRankExistente.utilizador.nome}, Questionarios: ");
-          userRankExistente.resultadosC.forEach((element) {
-            print(
-                "ID - Questinario Class do ${userRankExistente.utilizador.nome}, idQues ${element.questionarioID}, score: ${element.score}");
-          });
-          userRankExistente.resultadosMS.forEach((element) {
-            print(
-                "ID - Questinario Morte do ${userRankExistente.utilizador.nome}, idQues ${element.questionarioID}, score: ${element.score}");
-          });
-          userRankExistente.resultadosCR.forEach((element) {
-            print(
-                "ID - Questinario Relo do ${userRankExistente.utilizador.nome}, idQues ${element.questionarioID}, score: ${element.score}");
-          });*/
+          addResultToRightList(result, userExistente);
         }
-      } else if (userRankExistente == null) {
-        //Ainda nao existe nenhum dado do utilizador que respondeu a este questionario na lista para o ranking
-        Utilizador userTemp = dataSource.utilizadores
-            .where((element) => element.id == result.utilizadorID)
-            .single;
-        UtilizadorRanking userRankTemp = UtilizadorRanking(userTemp);
-
-        addResultToRightList(result, userRankTemp);
-        dataSource.utilizadoresRanking.add(userRankTemp);
-        /*
-        print(
-            "Adicionado user id: ${userRankTemp.utilizador.id}, nome: ${userRankTemp.utilizador.nome}");
-
-        userRankTemp.resultadosC.forEach((element) {
-          print(
-              "ID - Questinario Class, score: ${element.score}");
-        });
-        userRankTemp.resultadosMS.forEach((element) {
-          print(
-              "ID - Questinario Morte, score: ${element.score}");
-        });
-        userRankTemp.resultadosCR.forEach((element) {
-          print(
-              "ID - Questinario Relo, score: ${element.score}");
-        });*/
       }
-      //Senao quer dizer que o resultado ja foi registado
+      //Ignora o resultado se o user nao existir
+      //Não existe nenhum dado do utilizador que respondeu a este questionario na lista para o ranking
     }
   }
 
-  void addResultToRightList(Result result, UtilizadorRanking user) {
+  void addResultToRightList(Result result, Utilizador user) {
     switch (result.modo) {
       case "classico":
         user.resultadosC.add(result);
@@ -402,8 +364,7 @@ class Services {
     double totalMorteSubita = 0;
     double totalContraRelogio = 0;
 
-    UtilizadorRanking user = dataSource.utilizadoresRanking.firstWhere(
-        (element) => element.utilizador.id == dataSource.utilizadorAtivo.id);
+    Utilizador user = dataSource.utilizadorAtivo;
 
     for (Result res in user.resultadosC) {
       totalClassico += res.score;
@@ -428,8 +389,7 @@ class Services {
     int respostasErradas = 0;
     double percentagemAcerto = 0;
 
-    UtilizadorRanking user = dataSource.utilizadoresRanking.firstWhere(
-        (element) => element.utilizador.id == dataSource.utilizadorAtivo.id);
+    Utilizador user = dataSource.utilizadorAtivo;
 
     totalJogos = user.resultadosMS.length +
         user.resultadosCR.length +

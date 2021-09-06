@@ -1,6 +1,6 @@
 import 'dart:convert';
-
 import 'package:crypto/crypto.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:ubiquous_quizz_builder/app_colors.dart';
 import 'package:ubiquous_quizz_builder/controllers/services_bloc.dart';
 import 'package:ubiquous_quizz_builder/data/data_source.dart';
-import 'package:ubiquous_quizz_builder/screens/login/login_page.dart';
+import 'package:ubiquous_quizz_builder/screens/autenticacao/login/login_page.dart';
 import 'package:ubiquous_quizz_builder/widgets/ProgressWidget.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -32,35 +32,58 @@ class _RegisterScreenState extends State<RegisterScreen> {
   var snackBar = SnackBar(content: Text(""));
 
   Future<bool> register() async {
-
     setState(() {
       isApiCallProcess = true;
     });
+    if (_confirmPassword == _password) {
+      try {
+        final responseJson = await Provider.of<Services>(context, listen: false)
+            .register(_username, _email, _password.toString());
 
-    final responseJson = await Provider.of<Services>(context, listen: false)
-        .register(_username, _email, _password.toString());
+        print(responseJson);
 
-    print(responseJson);
-
-    if (responseJson['result'] == 0) {
-      await Provider.of<Services>(context, listen: false).fetchData("utilizadores");
-      setState(() {
-        isApiCallProcess = false;
-      });
-      return true;
+        if (responseJson['result'] == 0) {
+          await Provider.of<Services>(context, listen: false)
+              .fetchData("utilizadores");
+          setState(() {
+            isApiCallProcess = false;
+          });
+          return true;
+        } else {
+          snackBar = SnackBar(content: Text("Falha no registo da conta"));
+          setState(() {
+            isApiCallProcess = false;
+          });
+          return false;
+        }
+      } catch (e) {
+        print(
+            "----------\nProblema na ligação ao servidor: ${e
+                .toString()} \nVerifique se tem o caminho correto para o servidor no ficheiro: Common.dart\n----------");
+      }
     } else {
-      snackBar =
-          SnackBar(content: Text("Falha no login: Credenciais erradas"));
+      snackBar = SnackBar(
+          content: Text("Falha no registo da conta: Passwords diferentes"));
       setState(() {
         isApiCallProcess = false;
       });
       return false;
     }
+
+    snackBar = SnackBar(
+        content: Text("Falha no registo da conta: Verifique a sua ligação à internet"));
+
+    setState(() {
+      isApiCallProcess = false;
+    });
+    return false;
   }
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    Size size = MediaQuery
+        .of(context)
+        .size;
 
     return ProgressHUD(
       child: _registerUISetup(context),
@@ -69,7 +92,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget _registerUISetup(BuildContext context) {
-
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: AppColors.PrimaryLight,
@@ -85,14 +107,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
                   margin: EdgeInsets.symmetric(vertical: 85, horizontal: 20),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(50),
+                    border: Border.all(
+                      width: 2,
+                      color: AppColors.PrimaryLight,
+                    ),
                     gradient: AppColors.backgroudFade,
                     color: AppColors.PrimaryDarkBlue,
                     boxShadow: [
                       BoxShadow(
-                          color: AppColors.PrimaryMidBlue.withOpacity(0.2),
-                          offset: Offset(0, 10),
-                          blurRadius: 20)
+                        color: AppColors.PrimaryDarkBlue,
+                        blurRadius: 20,
+                      )
                     ],
                   ),
                   child: Form(
@@ -102,7 +128,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         SizedBox(height: 25),
                         Text(
                           "Registar",
-                          style: Theme.of(context)
+                          style: Theme
+                              .of(context)
                               .textTheme
                               .headline2
                               .merge(TextStyle(color: AppColors.SecondaryMid)),
@@ -132,8 +159,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     isApiCallProcess = false;
                                   });
 
-                                  snackBar =
-                                  SnackBar(content: Text("Falha ao registar a conta"));
                                   scaffoldKey.currentState
                                       .showSnackBar(snackBar);
                                 }
@@ -144,7 +169,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             "Registar",
                             style: TextStyle(color: Colors.white, fontSize: 17),
                           ),
-                          color: Theme.of(context).accentColor,
+                          color: Theme
+                              .of(context)
+                              .accentColor,
                           shape: StadiumBorder(),
                         ),
                         SizedBox(height: 20),
@@ -153,13 +180,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           margin: EdgeInsets.symmetric(
                               horizontal: 40, vertical: 10),
                           child: GestureDetector(
-                              onTap: () => {
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                LoginScreen()))
-                                  },
+                              onTap: () =>
+                              {
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            LoginScreen()))
+                              },
                               child: RichText(
                                 text: TextSpan(
                                   children: <TextSpan>[
@@ -194,9 +222,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Widget _buildPasswordFieldFirst() {
     return TextFormField(
-      style: TextStyle(color: AppColors.SecondaryMid),
+      style: TextStyle(color: Colors.white),
       keyboardType: TextInputType.text,
-      onSaved: (input) => {
+      onSaved: (input) =>
+      {
         //Encrypting password
         _password = sha1.convert(utf8.encode(input))
       },
@@ -204,15 +233,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
       obscureText: hidePassword,
       decoration: new InputDecoration(
         hintText: "Palavra-chave",
-        hintStyle: TextStyle(color: AppColors.SecondaryMid.withOpacity(0.4)),
+        hintStyle: TextStyle(color: Theme
+            .of(context)
+            .accentColor),
         enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide(
-                color: Theme.of(context).accentColor.withOpacity(0.2))),
+                color: Theme
+                    .of(context)
+                    .accentColor
+                    .withOpacity(0.2))),
         focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Theme.of(context).accentColor)),
+            borderSide: BorderSide(color: Theme
+                .of(context)
+                .accentColor)),
         prefixIcon: Icon(
           Icons.lock,
-          color: Theme.of(context).accentColor,
+          color: Theme
+              .of(context)
+              .accentColor,
         ),
         suffixIcon: IconButton(
           onPressed: () {
@@ -220,7 +258,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
               hidePassword = !hidePassword;
             });
           },
-          color: Theme.of(context).accentColor.withOpacity(0.4),
+          color: Theme
+              .of(context)
+              .accentColor,
           icon: Icon(hidePassword ? Icons.visibility_off : Icons.visibility),
         ),
       ),
@@ -229,9 +269,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Widget _buildPasswordFieldSecond() {
     return TextFormField(
-      style: TextStyle(color: AppColors.SecondaryMid),
+      style: TextStyle(color: Colors.white),
       keyboardType: TextInputType.text,
-      onSaved: (input) => {
+      onSaved: (input) =>
+      {
         //Encrypting password
         _confirmPassword = sha1.convert(utf8.encode(input))
       },
@@ -239,15 +280,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
       obscureText: hideConfirmPassword,
       decoration: new InputDecoration(
         hintText: "Confirme a palavra-chave",
-        hintStyle: TextStyle(color: AppColors.SecondaryMid.withOpacity(0.4)),
+        hintStyle: TextStyle(color: Theme
+            .of(context)
+            .accentColor),
         enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide(
-                color: Theme.of(context).accentColor.withOpacity(0.2))),
+                color: Theme
+                    .of(context)
+                    .accentColor
+                    .withOpacity(0.2))),
         focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Theme.of(context).accentColor)),
+            borderSide: BorderSide(color: Theme
+                .of(context)
+                .accentColor)),
         prefixIcon: Icon(
           Icons.lock,
-          color: Theme.of(context).accentColor,
+          color: Theme
+              .of(context)
+              .accentColor,
         ),
         suffixIcon: IconButton(
           onPressed: () {
@@ -255,8 +305,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
               hideConfirmPassword = !hideConfirmPassword;
             });
           },
-          color: Theme.of(context).accentColor.withOpacity(0.4),
-          icon: Icon(hideConfirmPassword ? Icons.visibility_off : Icons.visibility),
+          color: Theme
+              .of(context)
+              .accentColor,
+          icon: Icon(
+              hideConfirmPassword ? Icons.visibility_off : Icons.visibility),
         ),
       ),
     );
@@ -264,21 +317,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Widget _buildUsernameField() {
     return TextFormField(
-      style: TextStyle(color: AppColors.SecondaryMid),
+      style: TextStyle(color: Colors.white),
       keyboardType: TextInputType.emailAddress,
       onSaved: (input) => _username = input,
       validator: _validarUsername,
       decoration: new InputDecoration(
         hintText: "Nome de utilizador",
-        hintStyle: TextStyle(color: AppColors.SecondaryMid.withOpacity(0.4)),
+        hintStyle: TextStyle(color: Theme
+            .of(context)
+            .accentColor),
         enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide(
-                color: Theme.of(context).accentColor.withOpacity(0.2))),
+                color: Theme
+                    .of(context)
+                    .accentColor
+                    .withOpacity(0.2))),
         focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Theme.of(context).accentColor)),
+            borderSide: BorderSide(color: Theme
+                .of(context)
+                .accentColor)),
         prefixIcon: Icon(
           Icons.person,
-          color: Theme.of(context).accentColor,
+          color: Theme
+              .of(context)
+              .accentColor,
         ),
       ),
     );
@@ -286,21 +348,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Widget _buildEmailField() {
     return TextFormField(
-      style: TextStyle(color: AppColors.SecondaryMid),
+      style: TextStyle(color: Colors.white),
       keyboardType: TextInputType.emailAddress,
       onSaved: (input) => _email = input,
-      validator: _validarUsername,
+      validator: (input) => _validarEmail(input),
       decoration: new InputDecoration(
         hintText: "Email",
-        hintStyle: TextStyle(color: AppColors.SecondaryMid.withOpacity(0.4)),
+        hintStyle: TextStyle(color: Theme
+            .of(context)
+            .accentColor),
         enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide(
-                color: Theme.of(context).accentColor.withOpacity(0.2))),
+                color: Theme
+                    .of(context)
+                    .accentColor
+                    .withOpacity(0.2))),
         focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Theme.of(context).accentColor)),
+            borderSide: BorderSide(color: Theme
+                .of(context)
+                .accentColor)),
         prefixIcon: Icon(
           MdiIcons.email,
-          color: Theme.of(context).accentColor,
+          color: Theme
+              .of(context)
+              .accentColor,
         ),
       ),
     );
@@ -323,15 +394,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   String _validarEmail(String value) {
+    print(EmailValidator.validate(value));
     if (value.length == 0) {
       return "Email em falta";
+    } else if (!EmailValidator.validate(value)) {
+      return "Formato do email inválido";
     }
     return null;
   }
 
   String _validarPassword(String value) {
+    print("passwords");
+    print(_password != _confirmPassword);
+    print(_password);
+    print(_password);
     if (value.length == 0) {
       return "Password em falta";
+    } else if (value.length < 5) {
+      return "Password tem que contem pelo menos 5 caracteres";
     }
     return null;
   }

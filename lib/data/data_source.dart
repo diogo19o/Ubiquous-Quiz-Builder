@@ -1,9 +1,7 @@
 import 'dart:typed_data';
-
 import 'package:ubiquous_quizz_builder/models/Questions.dart';
 import 'package:ubiquous_quizz_builder/models/pergunta.dart';
 import 'package:ubiquous_quizz_builder/models/questionario_details.dart';
-import 'package:ubiquous_quizz_builder/models/ranking_user.dart';
 import 'package:ubiquous_quizz_builder/models/resposta.dart';
 import 'package:ubiquous_quizz_builder/models/resultado.dart';
 import 'package:ubiquous_quizz_builder/models/utilizador.dart';
@@ -29,15 +27,14 @@ class DataSource {
   List<Utilizador> _utilizadores = [];
   List<Utilizador> get utilizadores => _utilizadores;
 
-  List<UtilizadorRanking> _utilizadoresRanking = [];
-  List<UtilizadorRanking> get utilizadoresRanking => _utilizadoresRanking;
-
   Questionario _questionarioAtivo;
 
   Questionario get questionarioAtivo => _questionarioAtivo;
 
   Utilizador _utilizadorAtivo;
   Utilizador get utilizadorAtivo => _utilizadorAtivo;
+
+  List<Map<String, dynamic>> resultsToFetch = [];
 
   Uint8List imageBytes;
 
@@ -63,9 +60,6 @@ class DataSource {
 
   set setUtilizadores(List<Utilizador> utilizadores) {
     this._utilizadores = utilizadores;
-  }
-  set setUtilizadoresRanking(List<UtilizadorRanking> utilizadores) {
-    this._utilizadoresRanking = utilizadores;
   }
 
   set setUtilizadorAtivo(Utilizador utilizador) {

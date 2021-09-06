@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:ubiquous_quizz_builder/app_colors.dart';
 import 'package:ubiquous_quizz_builder/controllers/question_controller.dart';
 
@@ -23,15 +24,16 @@ class Option extends StatelessWidget {
         builder: (questionController) {
           Color getTheRightColor() {
             if (questionController.isAnswered) {
-              if(questionController.quizMode != 3){
+              if (questionController.quizMode != 3) {
                 if (index == questionController.correctAns) {
-                  return Colors.greenAccent;
+                  return Color.fromRGBO(52, 112, 68, 1);
                 } else if (index == questionController.selectedAns &&
-                    questionController.selectedAns != questionController.correctAns) {
+                    questionController.selectedAns !=
+                        questionController.correctAns) {
                   return Colors.red;
                 }
-              }else{
-                if(index == questionController.selectedAns){
+              } else {
+                if (index == questionController.selectedAns) {
                   return Colors.teal;
                 }
               }
@@ -40,7 +42,11 @@ class Option extends StatelessWidget {
           }
 
           IconData getTheRightIcon() {
-            return getTheRightColor() == Colors.red ? Icons.close : Icons.done;
+            return getTheRightColor() == Colors.red
+                ? Icons.close
+                : getTheRightColor() == Colors.teal
+                    ? MdiIcons.adjust
+                    : Icons.done;
           }
 
           return InkWell(

@@ -2,13 +2,14 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:ubiquous_quizz_builder/app_colors.dart';
 import 'package:ubiquous_quizz_builder/controllers/services_bloc.dart';
 import 'package:ubiquous_quizz_builder/data/data_source.dart';
 import 'package:ubiquous_quizz_builder/screens/home/home_page.dart';
-import 'package:ubiquous_quizz_builder/screens/register/register_page.dart';
+import 'package:ubiquous_quizz_builder/screens/autenticacao/register/register_page.dart';
 import 'package:ubiquous_quizz_builder/widgets/ProgressWidget.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -31,15 +32,23 @@ class _LoginScreenState extends State<LoginScreen> {
   bool fromRegister = Get.arguments;
   var snackBar = SnackBar(content: Text(""));
 
+  @override
+  void initState() {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+    ));
+    super.initState();
+  }
+
   Widget _buildUsernameField() {
     return TextFormField(
-      style: TextStyle(color: AppColors.SecondaryMid),
+      style: TextStyle(color: Colors.white),
       keyboardType: TextInputType.emailAddress,
       onSaved: (input) => _username = input,
       validator: _validarUsername,
       decoration: new InputDecoration(
         hintText: "Nome de utilizador",
-        hintStyle: TextStyle(color: AppColors.SecondaryMid.withOpacity(0.4)),
+        hintStyle: TextStyle(color: Theme.of(context).accentColor),
         enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide(
                 color: Theme.of(context).accentColor.withOpacity(0.2))),
@@ -55,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildPasswordField() {
     return TextFormField(
-      style: TextStyle(color: AppColors.SecondaryMid),
+      style: TextStyle(color: Colors.white),
       keyboardType: TextInputType.text,
       onSaved: (input) => {
         //Encrypting password
@@ -65,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
       obscureText: hidePassword,
       decoration: new InputDecoration(
         hintText: "Palavra-chave",
-        hintStyle: TextStyle(color: AppColors.SecondaryMid.withOpacity(0.4)),
+        hintStyle: TextStyle(color: Theme.of(context).accentColor),
         enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide(
                 color: Theme.of(context).accentColor.withOpacity(0.2))),
@@ -81,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
               hidePassword = !hidePassword;
             });
           },
-          color: Theme.of(context).accentColor.withOpacity(0.4),
+          color: Theme.of(context).accentColor,
           icon: Icon(hidePassword ? Icons.visibility_off : Icons.visibility),
         ),
       ),
@@ -103,11 +112,9 @@ class _LoginScreenState extends State<LoginScreen> {
         Provider.of<Services>(context, listen: false).loadActiveUser(_username);
         print(dataSource.questionarios.length);
         print(dataSource.utilizadores.length);
-        print(dataSource.utilizadoresRanking.length);
         await Provider.of<Services>(context, listen: false).fetchData("all");
         print(dataSource.questionarios.length);
         print(dataSource.utilizadores.length);
-        print(dataSource.utilizadoresRanking.length);
         setState(() {
           isApiCallProcess = false;
         });
@@ -143,13 +150,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    /*if(fromRegister != null && fromRegister){R
-      snackBar =
-          SnackBar(content: Text("Conta registada com sucesso"));
-      scaffoldKey.currentState
-          .showSnackBar(snackBar);
-    }*/
-
     return ProgressHUD(
       child: _LoginUISetup(context),
       inAsyncCall: isApiCallProcess,
@@ -161,32 +161,57 @@ class _LoginScreenState extends State<LoginScreen> {
       key: scaffoldKey,
       backgroundColor: AppColors.PrimaryLight,
       body: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
+        scrollDirection: Axis.vertical,
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
-            Stack(
-              children: <Widget>[
+            Container(
+              height: 250,
+              width: 250,
+              margin: EdgeInsets.only(top: 50),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(125),
+                  border: Border.all(
+                    width: 5,
+                    color: AppColors.SecondaryLight,
+                  ),
+                  boxShadow: true
+                      ? [
+                          BoxShadow(
+                            color: AppColors.SecondaryLight,
+                            blurRadius: 20,
+                          )
+                        ]
+                      : [],
+                  image: DecorationImage(
+                      image: ExactAssetImage(
+                          "assets/images/logo-ubiquous-quiz-builder.png"),
+                      fit: BoxFit.fill)),
+            ),
                 Container(
                   width: double.infinity,
                   padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-                  margin: EdgeInsets.symmetric(vertical: 85, horizontal: 20),
+                  margin: EdgeInsets.fromLTRB(20, 50, 20, 0),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(50),
+                    border: Border.all(
+                      width: 2,
+                      color: AppColors.PrimaryLight,
+                    ),
                     gradient: AppColors.backgroudFade,
                     color: AppColors.PrimaryDarkBlue,
                     boxShadow: [
                       BoxShadow(
-                          color: AppColors.PrimaryMidBlue.withOpacity(0.2),
-                          offset: Offset(0, 10),
-                          blurRadius: 20)
+                        color: AppColors.PrimaryDarkBlue,
+                        blurRadius: 20,
+                      )
                     ],
                   ),
                   child: Form(
                     key: _formKey,
                     child: Column(
                       children: <Widget>[
-                        SizedBox(height: 25),
+                        SizedBox(height: 10),
                         Text(
                           "Entrar",
                           style: Theme.of(context)
@@ -210,11 +235,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     isApiCallProcess = false;
                                   });
 
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => HomeScreen()),
-                                  );
+                                  Get.to(() => HomeScreen());
                                 } else {
                                   setState(() {
                                     isApiCallProcess = false;
@@ -236,15 +257,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(height: 20),
                         Container(
                           alignment: Alignment.center,
-                          margin: EdgeInsets.symmetric(
-                              horizontal: 40, vertical: 10),
+                          margin:
+                              EdgeInsets.symmetric(horizontal: 40, vertical: 5),
                           child: GestureDetector(
                               onTap: () => {
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                RegisterScreen()))
+                                    Get.to(() => RegisterScreen())
                                   },
                               child: RichText(
                                 text: TextSpan(
@@ -270,8 +287,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-              ],
-            ),
           ],
         ),
       ),

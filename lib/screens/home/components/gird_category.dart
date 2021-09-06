@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:ubiquous_quizz_builder/data/data_source.dart';
 import 'package:ubiquous_quizz_builder/screens/listQuestionarios/list.dart';
 
@@ -14,12 +15,7 @@ class CategoryGrid extends StatelessWidget {
   List<String> categories = ['Clássico','Contra-Relógio','Morte Súbita', 'Todos'];
 
   void navigateToCategoryList(String category, BuildContext context){
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ListQuestionarios(category),
-      ),
-    );
+    Get.to(() => ListQuestionarios(category));
   }
 
   @override

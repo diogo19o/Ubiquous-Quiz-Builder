@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ubiquous_quizz_builder/app_colors.dart';
 import 'package:ubiquous_quizz_builder/data/data_source.dart';
+import 'package:ubiquous_quizz_builder/screens/autenticacao/login/login_page.dart';
 import 'package:ubiquous_quizz_builder/screens/home/components/app_bar.dart';
 import 'package:ubiquous_quizz_builder/screens/home/components/user_avatar.dart';
-import 'package:ubiquous_quizz_builder/screens/login/login_page.dart';
 
 import 'components/bottom_nav_bar.dart';
 import 'components/category_title_bar.dart';
@@ -31,33 +31,24 @@ class HomeScreen extends StatelessWidget {
           actions: [UserAvatar()],
         ),
         body: Container(
-          decoration: BoxDecoration(gradient: AppColors.backgroudFade),
-          child: Stack(
-            children: [
-              Container(
-                height: size.height,
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    QuizTypeBar(
-                      title: "Modos de Jogo",
-                    ),
-                    CategoryGrid(),
-                    SizedBox(height: 20),
-                    /*ListTile(
-                      leading: new Image.memory(dataSource.imageBytes),
-                      title: new Text("imagem"),
-                    ),*/
-                    QuizTypeBar(
-                      title: "Modo Questionário",
-                    ),
-                    SliderQuestionario()
-                  ],
-                ),
-              ),
+            decoration: BoxDecoration(gradient: AppColors.backgroudFade),
+            height: size.height,
+            child: Stack(fit: StackFit.expand, children: [
               CurvedBottomNavBar(),
-            ],
-          ),
-        ));
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  QuizTypeBar(
+                    title: "Modos de Jogo",
+                  ),
+                  CategoryGrid(),
+                  SizedBox(height: 20),
+                  QuizTypeBar(
+                    title: "Modo Questionário",
+                  ),
+                  SliderQuestionario()
+                ],
+              ),
+            ])));
   }
 }

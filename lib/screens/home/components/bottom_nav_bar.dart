@@ -30,8 +30,8 @@ class _CurvedBottomNavBarState extends State<CurvedBottomNavBar> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return Stack(
-      children: [
+    return /*Stack(
+      children: [*/
         Positioned(
           bottom: 0,
           left: 0,
@@ -147,9 +147,9 @@ class _CurvedBottomNavBarState extends State<CurvedBottomNavBar> {
               ],
             ),
           ),
-        ),
+        )/*,
       ],
-    );
+    )*/;
   }
 }
 
