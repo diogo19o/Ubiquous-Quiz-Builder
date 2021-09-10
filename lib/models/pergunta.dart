@@ -1,12 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
-
-import 'imagem.dart';
 
 part 'pergunta.g.dart';
 
 @JsonSerializable()
-class Pergunta /*extends StatelessWidget*/ {
+class Pergunta {
 
   @JsonKey(name: 'PerguntaID', fromJson:_stringToInt, toJson: _stringFromInt)
   int id;
@@ -16,15 +13,11 @@ class Pergunta /*extends StatelessWidget*/ {
   final int resposta;
   @JsonKey(name: 'QuestionarioID', fromJson:_stringToInt, toJson: _stringFromInt)
   final int questionarioID;
-  @JsonKey(name: 'NomeImagem')
-  final String nomeImagem;
-  @JsonKey(ignore: true)
-  Imagem imagem;
-
-  //final int respostaID;
+  @JsonKey(name: 'Imagem')
+  final String imagem;
 
   Pergunta(
-  {this.id, this.texto, this.resposta, this.questionarioID,this.nomeImagem});
+  {this.id, this.texto, this.resposta, this.questionarioID,this.imagem});
 
   factory Pergunta.fromJson(Map<String, dynamic> json) => _$PerguntaFromJson(json);
 
@@ -32,17 +25,4 @@ class Pergunta /*extends StatelessWidget*/ {
 
   static int _stringToInt(String number) => number == null ? null : int.parse(number);
   static String _stringFromInt(int number) => number?.toString();
-
-
-  /*@override
-  Widget build(BuildContext context) {
-    return Container(
-        width: double.infinity,
-        margin: EdgeInsets.all(10),
-        child: Text(
-          textoPergunta,
-          style: TextStyle(fontSize: 28),
-          textAlign: TextAlign.center,
-        ));
-  }*/
 }

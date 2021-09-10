@@ -131,7 +131,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           style: Theme
                               .of(context)
                               .textTheme
-                              .headline2
+                              .headline3
                               .merge(TextStyle(color: AppColors.SecondaryMid)),
                         ),
                         SizedBox(height: 20),
@@ -394,7 +394,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   String _validarEmail(String value) {
-    print(EmailValidator.validate(value));
     if (value.length == 0) {
       return "Email em falta";
     } else if (!EmailValidator.validate(value)) {
@@ -404,14 +403,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   String _validarPassword(String value) {
-    print("passwords");
-    print(_password != _confirmPassword);
-    print(_password);
-    print(_password);
     if (value.length == 0) {
       return "Password em falta";
-    } else if (value.length < 5) {
-      return "Password tem que contem pelo menos 5 caracteres";
+    } else if (value.length < 6) {
+      return "Password tem que contem pelo menos 6 caracteres";
     }
     return null;
   }

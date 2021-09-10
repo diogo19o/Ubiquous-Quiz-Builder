@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
@@ -11,12 +13,14 @@ import '../../../constants.dart';
 import 'option.dart';
 
 class QuestionCard extends StatelessWidget {
-  const QuestionCard({
+  QuestionCard({
     Key key,
     @required this.pergunta,
   }) : super(key: key);
 
   final Pergunta pergunta;
+  var image;
+  var hasImage = false;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +30,15 @@ class QuestionCard extends StatelessWidget {
         .where((resposta) => resposta.perguntaID == pergunta.id)
         .toList();
     int indexCorrectAnswer =
-        respostas.indexWhere((resposta) => resposta.correta);
+    respostas.indexWhere((resposta) => resposta.correta);
+    const Base64Codec base64 = Base64Codec();
+
+    try{
+      image = Image.memory(base64.decode(pergunta.imagem));
+      hasImage = true;
+    }catch(e){
+      hasImage = false;
+    }
 
     return SingleChildScrollView(
       child: Column(
@@ -46,8 +58,8 @@ class QuestionCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               //Comentar esta linha para expandir a caixa branca
               children: [
-                pergunta.nomeImagem != null
-                    ? Image.memory(pergunta.imagem.imagemBytes)
+                hasImage
+                    ? image
                     : SizedBox(),
                 SizedBox(height: kDefaultPadding20 / 2),
                 Text(

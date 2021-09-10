@@ -15,11 +15,6 @@ abstract class UserService extends ChopperService {
     @Path('action') String action,
   );
 
-  @Get(path: 'teste.php/?action=imagem&imageName={imageName}')
-  Future<Response> getImage(
-      @Path('imageName') String imageName,
-      );
-
   @Post(path: 'user.php', headers: {contentTypeKey: formEncodedHeaders})
   Future<Response> loginUser(
     @Body() Map<String, String> body,

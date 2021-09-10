@@ -16,7 +16,7 @@ class QuestionController extends GetxController
   // Lets animated our progress bar
 
   QuestionController({this.quizMode}) {
-    cleanController();
+    //cleanController();
   }
 
   //Modo do questionario
@@ -81,14 +81,21 @@ class QuestionController extends GetxController
   @override
   void onInit() {
     int time;
-    _timeMins = dataSource.questionarioAtivo.questionarioDetails.timerMinutos;
-    _timeSecs = dataSource.questionarioAtivo.questionarioDetails.timerSegundos;
+    if (quizMode != 3) {
+      _timeMins = dataSource.questionarioAtivo.questionarioDetails.timerMinutos;
+      _timeSecs =
+          dataSource.questionarioAtivo.questionarioDetails.timerSegundos;
+    }else{
+      _timeMins = 99; // Tempo demasiado alto para nao avançar de pagina
+      _timeSecs = 99; // Garante que no final todo o controller seja destruido com sucesso
+
+    }
 
     if (_timeMins != 0 || _timeSecs != 0) {
       time = (_timeMins * 60 * 1000) + (_timeSecs * 1000);
     }
 
-    if (quizMode != 3) {
+    //if (quizMode != 3) {
       // Encher progress bar com o tempo de cada questionário
       _animationController = AnimationController(
           duration: Duration(minutes: _timeMins, seconds: _timeSecs),
@@ -102,7 +109,7 @@ class QuestionController extends GetxController
       // Começar a animacao
       // No fim da animacao passa para a próxima pergunta
       _animationController.forward().whenComplete(nextQuestion);
-    }
+    //}
     _pageController = PageController();
 
     _questions = dataSource.questionarioAtivo.perguntas;
@@ -136,7 +143,7 @@ class QuestionController extends GetxController
         _numOfCorrectAns++;
         totalTime = (_timeMins * 60 + _timeSecs);
         int timeLeft =
-            (totalTime - _animationController.value * totalTime).round();
+        (totalTime - _animationController.value * totalTime).round();
         //Se nao for modo contra relogio
         if (quizMode != 1) {
           _score += (timeLeft * 10).toInt();
@@ -149,10 +156,10 @@ class QuestionController extends GetxController
       }
 
       _answerTimes.add(_animationController.lastElapsedDuration.inMilliseconds);
-
+    }
       // Stop the counter
       _animationController.stop();
-    }
+    //} ESTE AQUI
 
     update();
 
@@ -168,7 +175,7 @@ class QuestionController extends GetxController
       _pageController.nextPage(
           duration: Duration(milliseconds: 250), curve: Curves.ease);
 
-      if (quizMode != 3) {
+      //if (quizMode != 3) {
         if (quizMode == 1) { // Contra-Relógio
           _animationController.repeat();
         } else {// Classico / Morte subita
@@ -178,12 +185,13 @@ class QuestionController extends GetxController
 
         // Quando o timer acabar avanca para a proxima pergunta
         _animationController.forward().whenComplete(nextQuestion);
-      }
+      //}
     } else { //Acabou as perguntas
 
       Map<String, String> mapResultado;
       Map<String, dynamic> quizStatus;
 
+      maxScorePossible = (_timeMins * 60 + _timeSecs) * _questions.length;
 
       if (quizMode != 3) { //Status a enviar para o Score Screen no modo Classico, Morte Subita e Contra Relogio
         Utilizador user = dataSource.utilizadorAtivo;
@@ -220,7 +228,7 @@ class QuestionController extends GetxController
         if (tempResults.isNotEmpty) {
           tempResults.sort((a, b) => b.score.compareTo(a.score));
           if (_score > tempResults[0].score && _score != 0) _newHighScore = true;
-        } else if (tempResults.isEmpty) {
+        } else if (tempResults.isEmpty && _score != 0) {
           _newHighScore = true;
         } else {
           _newHighScore = false;
@@ -276,6 +284,8 @@ class QuestionController extends GetxController
 
       _services.sendResultToServer(mapResultado);
 
+
+
       // Get package provide us simple way to navigate another page
       Get.off(() => ScoreScreen(), arguments: quizStatus);
     }
@@ -287,22 +297,27 @@ class QuestionController extends GetxController
         maxScorePossible = (totalTime * 10);
         if (numOfCorrectAns == 0) {
           return "Este não correu muito bem, mas não desistas!";
-        } else if (numOfCorrectAns < questions.length / 2) {
-          return "Bora lá, tu consegues melhor.";
         }
-        else if (numOfCorrectAns >
-            questions.length / 2) { // Se acertou mais de metade
-          return "Boa! Conseguiste acertar mais de metade do questionario.";
+        if (numOfCorrectAns < questions.length / 2) {
+          return "Vamos lá! Tu consegues melhor.";
         }
-        else if (numOfCorrectAns == questions.length &&
+         if (numOfCorrectAns == questions.length &&
             _score < (maxScorePossible - (50 * questions.length))) {
           //Se acertou todas as perguntas porém demorou mais de 5 segundos (50 pontos perdidos por pergunta) por pergunta
           return "Muito bem! Conseguiste acertar todas as perguntas, agora tenta ser mais rápido.";
         }
-        else if (numOfCorrectAns == questions.length &&
-            _score < (maxScorePossible - (20 * questions.length))) {
-          //Se acertou todas as perguntas porém demorou mais de 5 segundos (50 pontos perdidos por pergunta) por pergunta
-          return "Incrivel! Estas mesmo quase a obter a pontuação máxima.";
+         if (numOfCorrectAns == questions.length &&
+            _score < (maxScorePossible - (30 * questions.length))) {
+          //Se acertou todas as perguntas porém demorou mais de 2 segundos (20 pontos perdidos por pergunta) por pergunta
+          return "Incrível! Estás mesmo quase a obter a pontuação máxima.";
+        }
+         if (numOfCorrectAns >
+            questions.length / 2) { // Se acertou mais de metade
+          return "Boa! Conseguiste acertar mais de metade do questionário.";
+        }
+         if (numOfCorrectAns ==
+            questions.length / 2) { // Se acertou mais de metade
+          return "Boa! Conseguiste acertar metade do questionário.";
         }
       } else {
         return "Fim do Contra Relogio";

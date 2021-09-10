@@ -115,32 +115,6 @@ class Services {
     }
   }
 
-  Future<dynamic> checkForImages() async {
-    for (var pergunta in dataSource.questionarioAtivo.perguntas) {
-      if (pergunta.nomeImagem != null) {
-        pergunta.imagem = await getImage(pergunta.nomeImagem, pergunta.id);
-      }
-    }
-  }
-
-  Future<Imagem> getImage(String imageName, int idPergunta) async {
-    var responseJson;
-    try {
-      final response = await userService.getImage(imageName);
-      responseJson = _returnResponse(response);
-      const Base64Codec base64 = Base64Codec();
-      Uint8List imageBytes = base64.decode(responseJson["imagem"]);
-      Imagem imagem = Imagem(idPergunta, imageBytes);
-      return imagem;
-    } on SocketException {
-      dataSource.connected = false;
-      throw FetchDataException('No Internet connection to the Server');
-    } catch (e) {
-      dataSource.connected = false;
-      throw e;
-    }
-  }
-
   Future<dynamic> fetchData(String dataType) async {
     var responseJson;
 

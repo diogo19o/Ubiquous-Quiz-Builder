@@ -216,7 +216,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           "Entrar",
                           style: Theme.of(context)
                               .textTheme
-                              .headline2
+                              .headline3
                               .merge(TextStyle(color: AppColors.SecondaryMid)),
                         ),
                         SizedBox(height: 20),

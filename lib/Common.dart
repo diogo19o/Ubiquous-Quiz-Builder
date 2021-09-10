@@ -17,8 +17,8 @@ class Common {
   /********************************* IMPORTANT *********************************
       Change variable URL_BASE_ADDRESS down below if using remote server instead of local
 
-      Local: Common.baseLocalServiceUrlL
-      Remote: Common.baseRemoteServiceUrl
+      Local: baseLocalServiceUrlL
+      Remote: baseRemoteServiceUrl
 
       After changing this, run "flutter pub run build_runner build" on terminal
       to re-generate user_service_api.chopper.dart

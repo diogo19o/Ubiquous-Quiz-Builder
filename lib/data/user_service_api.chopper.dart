@@ -24,13 +24,6 @@ class _$UserService extends UserService {
   }
 
   @override
-  Future<Response<dynamic>> getImage(String imageName) {
-    final $url = 'teste.php/?action=imagem&imageName=$imageName';
-    final $request = Request('GET', $url, client.baseUrl);
-    return client.send<dynamic, dynamic>($request);
-  }
-
-  @override
   Future<Response<dynamic>> loginUser(Map<String, String> body) {
     final $url = 'user.php';
     final $headers = {'content-type': 'application/x-www-form-urlencoded'};

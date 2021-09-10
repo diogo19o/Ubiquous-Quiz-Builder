@@ -174,32 +174,33 @@ class ScoreScreen extends StatelessWidget {
                   : SizedBox(),
               Spacer(),
               _dataSource.questionarioAtivo.questionarioDetails.modo !=
-                  "questionario" ? /*Text(
+                      "questionario"
+                  ? /*Text(
                 "Score - ${status["score"]} pts",
                 style: Theme.of(context)
                     .textTheme
                     .headline3
                     .copyWith(color: AppColors.Orange),
               )*/
-              Text.rich(
-                TextSpan(
-                  text:
-                  "Score - ${status["score"]}",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline4
-                      .copyWith(color: AppColors.Orange),
-                  children: [
-                    TextSpan(
-                      text: "/${status["maxScore"]}",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline4
-                          .copyWith(color: AppColors.SecondaryLight),
-                    ),
-                  ],
-                ),
-              ): SizedBox(),
+                  Text.rich(
+                      TextSpan(
+                        text: "Score - ${status["score"]}",
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline4
+                            .copyWith(color: AppColors.Orange),
+                        children: [
+                          TextSpan(
+                            text: "/${status["maxScore"]}",
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline4
+                                .copyWith(color: AppColors.SecondaryLight),
+                          ),
+                        ],
+                      ),
+                    )
+                  : SizedBox(),
               Spacer(),
               RaisedGradientButton(
                   child: Text(

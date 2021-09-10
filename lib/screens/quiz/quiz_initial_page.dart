@@ -12,7 +12,6 @@ class QuizInitialPage extends StatelessWidget {
   DataSource _dataSource = DataSource();
   Services _services = Services();
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  Services services = Services();
 
   Widget _buildTextDetalhe(
       BuildContext context, String tituloDetalhe, String valorDetalhe) {
@@ -41,11 +40,11 @@ class QuizInitialPage extends StatelessWidget {
 
   void _navigateToQuiz(BuildContext context) {
     if(_dataSource.questionarioAtivo.questionarioDetails.modo == "questionario"){
-      //if(_services.jaRespondeuQuestionario()){
-        //scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("Já respondeu a este questionário!")));
-      //}else{
+      if(_services.jaRespondeuQuestionario()){
+        scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("Já respondeu a este questionário!")));
+      }else{
         Get.to(() => QuizScreen());
-      //}
+      }
     }else{
       //Não é questionário
       Get.to(() => QuizScreen());
@@ -57,13 +56,6 @@ class QuizInitialPage extends StatelessWidget {
     QuestionarioDetails detalhesQuestionario =
         DataSource().questionarioAtivo.questionarioDetails;
     final Size size = MediaQuery.of(context).size;
-
-    try {
-      services.checkForImages();
-    }catch (e){
-      e.toString();
-      print("Não ha ligação");
-    }
 
     return Scaffold(
       key: scaffoldKey,
