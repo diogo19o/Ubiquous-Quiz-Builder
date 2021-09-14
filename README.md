@@ -2,7 +2,14 @@
 Bem vindo ao repositório da aplicação Ubiquous Quiz Builder. Esta aplicação faz parte de uma plataforma com uma componente Web onde permite a utilizadores criarem questionarios, visualizarem as suas estatisticas e tambem fazer a gestão dos mesmos no caso dos administradores.  
 A componente atual a ser desenvolvida neste repositório é uma aplicação que nos permite responder aos questionarios criados na plataforma Web.
 
-Video demonstrativo da Plataforma Online e da aplicação: https://youtu.be/U5lXcgpISiY
+Link para download da apicação:
+https://www.mediafire.com/file/zqpk14ej4ovgh6h/Ubiquous-Quiz-Builder.apk/file
+
+Link para a plataforma online (onde se pode criar os questionários):
+https://php-ubiquous-quiz-builder.herokuapp.com/
+
+Video demonstrativo da Plataforma Online e da aplicação:
+https://youtu.be/U5lXcgpISiY
 
 Repositório da plataforma Web:
 https://github.com/diogo19o/php-ubiquous-quiz-builder
@@ -40,17 +47,17 @@ Esta app não foi desenvolvida para a versão mais recente do Flutter que ja imp
 
 ### Funcionais:
 - [x] Efetuar login.
-- [ ] Registar uma conta.
-- [ ] Três modos de jogo (Clássico, Contra-relógio e Morte súbita).
-- [ ] Modo questionário que só pode ser respondido uma vez por pessoa.
-- [x] Lista de quizzes e questionários ativos.
-- [ ] Sistema de filtragem/ordenação das listas.
-- [ ] Mostrar o resultado no final de responder a cada quizz.
-- [ ] Guardar pontuações obtidas nos questionários como também o número de quizzes respondidos.
-- [ ] Sistema de ranking nos diferentes modos de jogo.
+- [x] Registar uma conta.
+- [x] Três modos de jogo (Clássico, Contra-relógio e Morte súbita).
+- [x] Modo questionário que só pode ser respondido uma vez por pessoa.
+- [x] Lista de questionários por modo.
+- [x] Sistema de filtragem/ordenação das listas.
+- [x] Mostrar o resultado no final de responder a cada quizz.
+- [x] Guardar pontuações obtidas nos questionários como também o número de quizzes respondidos.
+- [x] Sistema de ranking nos diferentes modos de jogo.
+- [x] Perguntas com imagens.
 
 
 ### Não Funcionais:
 - [x] Aplicação desenvolvida em Flutter
 - [x] Aplicação disponivel para Android e IOS
-- [x] Ligação à internet 
