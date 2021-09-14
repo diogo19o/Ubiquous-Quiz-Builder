@@ -146,66 +146,62 @@ class _RankingScreenState extends State<RankingScreen> {
             margin: EdgeInsets.symmetric(vertical: 5),
             padding: EdgeInsets.symmetric(horizontal: 30),
             width: MediaQuery.of(context).size.width,
-            child: Row(
-              children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(
-                      "${index + 1}",
-                      style: TextStyle(color: Colors.white, fontSize: 14),
-                    ),
-                    /*Icon(
-                        Icons.arrow_drop_up,
-                        color: Color(0xff21EEB6),
-                      )*/
-                  ],
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * .75,
-                  decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(.2),
-                      borderRadius: BorderRadius.circular(50)),
-                  padding: EdgeInsets.only(right: 20),
-                  child: Row(
+            child: Center(
+              child: Row(
+                children: <Widget>[
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      CircleAvatar(
-                        child: Icon(
-                          MdiIcons.account,
-                          size: 30,
-                          color: AppColors.SecondaryLight,
-                        ),
-                        radius: 22,
-                        backgroundColor: AppColors.PrimaryLight,
-                        /*backgroundImage: NetworkImage(
-                              controller.listaUsersRanking[index].picture),*/
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                        child: Text(
-                          controller.listaUsersRanking[index].nome,
-                          style: TextStyle(color: Colors.white, fontSize: 15),
-                        ),
-                      ),
                       Text(
-                        "${controller.selectedIndex == 0 ? controller.listaUsersRanking[index].resultadosCR[0].score : controller.selectedIndex == 1 ? controller.listaUsersRanking[index].resultadosC[0].score : controller.listaUsersRanking[index].resultadosMS[0].score}",
-                        style: TextStyle(
-                            color: AppColors.Orange,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold),
-                      )
+                        "${index + 1}",
+                        style: TextStyle(color: Colors.white, fontSize: 14),
+                      ),
                     ],
                   ),
-                ),
-              ],
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width * .75,
+                    decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(.2),
+                        borderRadius: BorderRadius.circular(50)),
+                    padding: EdgeInsets.only(right: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        CircleAvatar(
+                          child: Icon(
+                            MdiIcons.account,
+                            size: 30,
+                            color: AppColors.SecondaryLight,
+                          ),
+                          radius: 22,
+                          backgroundColor: AppColors.PrimaryLight,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: Text(
+                            controller.listaUsersRanking[index].nome,
+                            style: TextStyle(color: Colors.white, fontSize: 15),
+                          ),
+                        ),
+                        Text(
+                          "${controller.selectedIndex == 0 ? controller.listaUsersRanking[index].resultadosCR[0].score : controller.selectedIndex == 1 ? controller.listaUsersRanking[index].resultadosC[0].score : controller.listaUsersRanking[index].resultadosMS[0].score}",
+                          style: TextStyle(
+                              color: AppColors.Orange,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         },

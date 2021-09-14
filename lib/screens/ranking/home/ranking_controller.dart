@@ -69,7 +69,7 @@ abstract class _RankingController with Store {
         break;
     }
 
-    for(Utilizador user in novaLista){
+    /*for(Utilizador user in novaLista){
       print("--------USER-------");
       print(user.nome);
       print(user.resultadosC.length);
@@ -98,7 +98,7 @@ abstract class _RankingController with Store {
         print(user.resultadosMS[1].score);
       }
       print("/|/|/|/|//|/|/|/|/|/|/|/");
-    }
+    }*/
 
 
     listaUsersRanking = novaLista;

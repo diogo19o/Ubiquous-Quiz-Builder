@@ -214,7 +214,9 @@ class Services {
             userExistente.resultadosMS +
             userExistente.resultadosCR;
 
-        if (resultados.singleWhere((element) => element.id == result.id, orElse: () => null) == null) {
+        if (resultados.singleWhere((element) => element.id == result.id,
+                orElse: () => null) ==
+            null) {
           addResultToRightList(result, userExistente);
         }
       }
@@ -226,16 +228,16 @@ class Services {
   void addResultToRightList(Result result, Utilizador user) {
     switch (result.modo) {
       case "classico":
-          user.resultadosC.add(result);
-          user.resultadosC.sort((a, b) => b.score.compareTo(a.score));
+        user.resultadosC.add(result);
+        user.resultadosC.sort((a, b) => b.score.compareTo(a.score));
         break;
       case "morte_subita":
-          user.resultadosMS.add(result);
-          user.resultadosMS.sort((a, b) => b.score.compareTo(a.score));
+        user.resultadosMS.add(result);
+        user.resultadosMS.sort((a, b) => b.score.compareTo(a.score));
         break;
       case "contra_relogio":
-          user.resultadosCR.add(result);
-          user.resultadosCR.sort((a, b) => b.score.compareTo(a.score));
+        user.resultadosCR.add(result);
+        user.resultadosCR.sort((a, b) => b.score.compareTo(a.score));
         break;
     }
   }
@@ -382,9 +384,10 @@ class Services {
       respostasCertas += res.respostasCorretas;
       respostasErradas += res.respostasErradas;
     }
-
-    percentagemAcerto =
-        respostasCertas / (respostasCertas + respostasErradas) * 100;
+    if (!(respostasErradas == 0 && respostasCertas == 0)) {
+      percentagemAcerto =
+          respostasCertas / (respostasCertas + respostasErradas) * 100;
+    }
 
     return [totalJogos, respostasCertas, respostasErradas, percentagemAcerto];
   }

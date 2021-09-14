@@ -23,7 +23,7 @@ class TopThreeRanking extends StatelessWidget {
         ),
 
         if(second != null) Positioned(
-          left: MediaQuery.of(context).size.width / 3 - 60,
+          left: MediaQuery.of(context).size.width / 8,
           top: 40,
           child: Column(
             children: <Widget>[
@@ -52,7 +52,7 @@ class TopThreeRanking extends StatelessWidget {
           ),
         ),
         first != null ? Positioned(
-          left: MediaQuery.of(context).size.width / 3 + 20,
+          left: MediaQuery.of(context).size.width / 2 - 50,
           child: Column(
             children: <Widget>[
               SizedBox(
@@ -78,7 +78,7 @@ class TopThreeRanking extends StatelessWidget {
           ),
         ): Text("não há registos"),
         if(third != null) Positioned(
-          left: MediaQuery.of(context).size.width / 3 + 120,
+          right: MediaQuery.of(context).size.width / 8,
           top: 40,
           child: Column(
             children: <Widget>[
