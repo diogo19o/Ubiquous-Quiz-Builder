@@ -5,11 +5,11 @@ A componente atual a ser desenvolvida neste repositório é uma aplicação que 
 Link para download da apicação:
 https://www.mediafire.com/file/kukokrxksran5fu/Ubiquous-Quiz-Builder-apk.apk/file
 
-Video demonstrativo da Plataforma Online e da aplicação:
-https://youtu.be/U5lXcgpISiY
-
 Link para a plataforma online (onde se pode criar os questionários):
 https://php-ubiquous-quiz-builder.herokuapp.com/
+
+Video demonstrativo da Plataforma Online e da aplicação:
+https://youtu.be/U5lXcgpISiY
 
 Repositório da plataforma Web:
 https://github.com/diogo19o/php-ubiquous-quiz-builder
