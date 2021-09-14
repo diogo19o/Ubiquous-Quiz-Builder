@@ -40,17 +40,17 @@ Esta app não foi desenvolvida para a versão mais recente do Flutter que ja imp
 
 ### Funcionais:
 - [x] Efetuar login.
-- [ ] Registar uma conta.
-- [ ] Três modos de jogo (Clássico, Contra-relógio e Morte súbita).
-- [ ] Modo questionário que só pode ser respondido uma vez por pessoa.
-- [x] Lista de quizzes e questionários ativos.
-- [ ] Sistema de filtragem/ordenação das listas.
-- [ ] Mostrar o resultado no final de responder a cada quizz.
-- [ ] Guardar pontuações obtidas nos questionários como também o número de quizzes respondidos.
-- [ ] Sistema de ranking nos diferentes modos de jogo.
+- [x] Registar uma conta.
+- [x] Três modos de jogo (Clássico, Contra-relógio e Morte súbita).
+- [x] Modo questionário que só pode ser respondido uma vez por pessoa.
+- [x] Lista de questionários por modo.
+- [x] Sistema de filtragem/ordenação das listas.
+- [x] Mostrar o resultado no final de responder a cada quizz.
+- [x] Guardar pontuações obtidas nos questionários como também o número de quizzes respondidos.
+- [x] Sistema de ranking nos diferentes modos de jogo.
+- [x] Perguntas com imagens.
 
 
 ### Não Funcionais:
 - [x] Aplicação desenvolvida em Flutter
 - [x] Aplicação disponivel para Android e IOS
-- [x] Ligação à internet 
