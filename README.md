@@ -2,6 +2,8 @@
 Bem vindo ao repositório da aplicação Ubiquous Quiz Builder. Esta aplicação faz parte de uma plataforma com uma componente Web onde permite a utilizadores criarem questionarios, visualizarem as suas estatisticas e tambem fazer a gestão dos mesmos no caso dos administradores.  
 A componente atual a ser desenvolvida neste repositório é uma aplicação que nos permite responder aos questionarios criados na plataforma Web.
 
+Video demonstratido da Plataforma Online e da aplicação: https://youtu.be/U5lXcgpISiY
+
 Repositório da plataforma Web:
 https://github.com/diogo19o/php-ubiquous-quiz-builder
 
