@@ -2,6 +2,11 @@
 Bem vindo ao repositório da aplicação Ubiquous Quiz Builder. Esta aplicação faz parte de uma plataforma com uma componente Web onde permite a utilizadores criarem questionarios, visualizarem as suas estatisticas e tambem fazer a gestão dos mesmos no caso dos administradores.  
 A componente atual a ser desenvolvida neste repositório é uma aplicação que nos permite responder aos questionarios criados na plataforma Web.
 
+Video demonstrativo da Plataforma Online e da aplicação: https://youtu.be/U5lXcgpISiY
+
+Repositório da plataforma Web:
+https://github.com/diogo19o/php-ubiquous-quiz-builder
+
 ## Como correr o projeto?
 
 Abra o AndroidStudio. Caso esteja com um projeto aberto, vá a "File" > "Close Project" e agora na janela inicial selecione "Get from Version Control", e cole o link: https://github.com/diogo19o/Ubiquous-Quizz-Builder.git
