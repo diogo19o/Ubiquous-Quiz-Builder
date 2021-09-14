@@ -40,29 +40,19 @@ mixin _$RankingController on _RankingController, Store {
     });
   }
 
-  final _$_RankingControllerActionController =
-      ActionController(name: '_RankingController');
+  final _$changeIndexAsyncAction =
+      AsyncAction('_RankingController.changeIndex');
 
   @override
-  void changeIndex(int index) {
-    final _$actionInfo = _$_RankingControllerActionController.startAction(
-        name: '_RankingController.changeIndex');
-    try {
-      return super.changeIndex(index);
-    } finally {
-      _$_RankingControllerActionController.endAction(_$actionInfo);
-    }
+  Future<void> changeIndex(int index) {
+    return _$changeIndexAsyncAction.run(() => super.changeIndex(index));
   }
 
+  final _$fillDataAsyncAction = AsyncAction('_RankingController.fillData');
+
   @override
-  dynamic fillData(int i) {
-    final _$actionInfo = _$_RankingControllerActionController.startAction(
-        name: '_RankingController.fillData');
-    try {
-      return super.fillData(i);
-    } finally {
-      _$_RankingControllerActionController.endAction(_$actionInfo);
-    }
+  Future fillData(int i) {
+    return _$fillDataAsyncAction.run(() => super.fillData(i));
   }
 
   @override

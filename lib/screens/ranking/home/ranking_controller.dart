@@ -1,7 +1,6 @@
 import 'package:mobx/mobx.dart';
 import 'package:ubiquous_quizz_builder/data/data_source.dart';
 import 'package:ubiquous_quizz_builder/controllers/services_bloc.dart';
-import 'package:ubiquous_quizz_builder/models/ranking_user.dart';
 import 'package:ubiquous_quizz_builder/models/utilizador.dart';
 
 part 'ranking_controller.g.dart';
@@ -23,14 +22,14 @@ abstract class _RankingController with Store {
   List<Utilizador> listaUsersRanking = [];
 
   @action
-  void changeIndex(int index) {
+  Future<void> changeIndex(int index) async {
     selectedIndex = index;
-    fillData(index);
+    await fillData(index);
   }
 
   @action
-  fillData(int i) {
-    //var response = await blocServices.fetchResultsList();
+  fillData(int i) async {
+    await blocServices.fetchResultsList();
 
     List<Utilizador> novaLista = [];
 
@@ -40,10 +39,10 @@ abstract class _RankingController with Store {
           for (var user in _dataSource.utilizadores) {
             if (user.resultadosCR.isNotEmpty) {
               novaLista.add(user);
+              novaLista.sort((a, b) =>
+                  b.resultadosCR[0].score.compareTo(a.resultadosCR[0].score));
             }
           }
-          novaLista.sort((a, b) =>
-              b.resultadosCR[0].score.compareTo(a.resultadosCR[0].score));
         }
         break;
       case 1:
@@ -51,9 +50,9 @@ abstract class _RankingController with Store {
           for (var user in _dataSource.utilizadores) {
             if (user.resultadosC.isNotEmpty) {
               novaLista.add(user);
+              novaLista.sort((a, b) =>
+                  b.resultadosC[0].score.compareTo(a.resultadosC[0].score));
             }
-            novaLista.sort((a, b) =>
-                b.resultadosC[0].score.compareTo(a.resultadosC[0].score));
           }
           break;
         }
@@ -62,13 +61,45 @@ abstract class _RankingController with Store {
           for (var user in _dataSource.utilizadores) {
             if (user.resultadosMS.isNotEmpty) {
               novaLista.add(user);
+              novaLista.sort((a, b) =>
+                  b.resultadosMS[0].score.compareTo(a.resultadosMS[0].score));
             }
           }
-          novaLista.sort((a, b) =>
-              a.resultadosMS[0].score.compareTo(b.resultadosMS[0].score));
         }
         break;
     }
+
+    for(Utilizador user in novaLista){
+      print("--------USER-------");
+      print(user.nome);
+      print(user.resultadosC.length);
+      print(user.resultadosCR.length);
+      print(user.resultadosMS.length);
+      print("-------------------");
+      print("C");
+      if(user.resultadosC.length == 1){
+        print(user.resultadosC[0].score);
+      }else if(user.resultadosC.length == 2){
+        print(user.resultadosC[0].score);
+        print(user.resultadosC[1].score);
+      }
+      print("CR");
+      if(user.resultadosCR.length == 1){
+        print(user.resultadosCR[0].score);
+      }else if(user.resultadosCR.length == 2){
+        print(user.resultadosC[0].score);
+        print(user.resultadosCR[1].score);
+      }
+      print("MS");
+      if(user.resultadosMS.length == 1){
+        print(user.resultadosMS[0].score);
+      }else if(user.resultadosMS.length == 2){
+        print(user.resultadosC[0].score);
+        print(user.resultadosMS[1].score);
+      }
+      print("/|/|/|/|//|/|/|/|/|/|/|/");
+    }
+
 
     listaUsersRanking = novaLista;
   }

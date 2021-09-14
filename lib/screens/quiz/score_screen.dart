@@ -190,13 +190,13 @@ class ScoreScreen extends StatelessWidget {
                             .headline4
                             .copyWith(color: AppColors.Orange),
                         children: [
-                          TextSpan(
+                          /*TextSpan(
                             text: "/${status["maxScore"]}",
                             style: Theme.of(context)
                                 .textTheme
                                 .headline4
                                 .copyWith(color: AppColors.SecondaryLight),
-                          ),
+                          ),*/
                         ],
                       ),
                     )

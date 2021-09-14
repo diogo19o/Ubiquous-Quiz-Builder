@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:ubiquous_quizz_builder/app_colors.dart';
 import 'package:ubiquous_quizz_builder/models/ranking_user.dart';
 import 'package:ubiquous_quizz_builder/models/utilizador.dart';
+import 'package:ubiquous_quizz_builder/screens/ranking/home/ranking_controller.dart';
+import 'package:ubiquous_quizz_builder/screens/ranking/home/ranking_page.dart';
 
 class TopThreeRanking extends StatelessWidget {
   final Utilizador first;
   final Utilizador second;
   final Utilizador third;
+  int index;
 
-  const TopThreeRanking({Key key, this.first, this.second, this.third})
+  TopThreeRanking({Key key, this.first, this.second, this.third, this.index})
       : super(key: key);
 
   @override
@@ -43,6 +46,7 @@ class TopThreeRanking extends StatelessWidget {
                 user: second,
                 image: 'assets/images/trophy-2-no-bg.png',
                 size: 80,
+                index: index,
               ),
             ],
           ),
@@ -68,6 +72,7 @@ class TopThreeRanking extends StatelessWidget {
                 image: 'assets/images/trophy-1-no-bg.png',
                 showGlow: true,
                 size: 100,
+                index: index,
               ),
             ],
           ),
@@ -96,6 +101,7 @@ class TopThreeRanking extends StatelessWidget {
                 user: third,
                 image: 'assets/images/trophy-3-no-bg.png',
                 size: 80,
+                index: index,
               ),
             ],
           ),
@@ -110,9 +116,10 @@ class CustomCircleAvatar extends StatelessWidget {
   final String image;
   final Utilizador user;
   final bool showGlow;
+  int index;
 
-  const CustomCircleAvatar(
-      {Key key, this.size, this.image, this.user, this.showGlow = false})
+  CustomCircleAvatar(
+      {Key key, this.size, this.image, this.user, this.showGlow = false, this.index})
       : super(key: key);
 
   @override
@@ -150,8 +157,8 @@ class CustomCircleAvatar extends StatelessWidget {
         SizedBox(
           height: 5,
         ),
-        Text(
-          "${user.resultadosC[0].score}",
+        Text( index == 0 ?
+          "${user.resultadosCR[0].score}": index == 1 ? "${user.resultadosC[0].score}" : index == 2 ? "${user.resultadosMS[0].score}" :"Erro",
           style: TextStyle(
               color: AppColors.Orange,
               fontWeight: FontWeight.bold,

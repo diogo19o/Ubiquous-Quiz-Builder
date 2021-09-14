@@ -171,12 +171,12 @@ class _ListQuestionariosState extends State<ListQuestionarios> {
 
     if (category != "all") {
       List<QuestionarioDetails> questionariosFiltered = questionarios
-          .where((questionario) => questionario.modo == category)
+          .where((questionario) => questionario.modo == category && questionario.acesso == "publico")
           .toList();
       questionarios = questionariosFiltered;
     } else {
       List<QuestionarioDetails> questionariosFiltered = questionarios
-          .where((questionario) => questionario.modo != "questionario")
+          .where((questionario) => questionario.modo != "questionario" && questionario.acesso == "publico")
           .toList();
       questionarios = questionariosFiltered;
     }

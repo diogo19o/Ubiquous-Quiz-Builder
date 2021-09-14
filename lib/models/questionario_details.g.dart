@@ -18,6 +18,7 @@ QuestionarioDetails _$QuestionarioDetailsFromJson(Map<String, dynamic> json) {
         QuestionarioDetails._stringToInt(json['TimerMinutos'] as String),
     timerSegundos:
         QuestionarioDetails._stringToInt(json['TimerSegundos'] as String),
+    acesso: json['Acesso'] as String,
   )..estado = json['estado'] as String;
 }
 
@@ -33,5 +34,6 @@ Map<String, dynamic> _$QuestionarioDetailsToJson(
       'TimerMinutos': QuestionarioDetails._stringFromInt(instance.timerMinutos),
       'TimerSegundos':
           QuestionarioDetails._stringFromInt(instance.timerSegundos),
+      'Acesso': instance.acesso,
       'estado': instance.estado,
     };

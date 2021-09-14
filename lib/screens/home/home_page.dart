@@ -26,7 +26,7 @@ class HomeScreen extends StatelessWidget {
           title: 'Quiz Builder',
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Get.off(() => LoginScreen()),
+            onPressed: () => Get.to(LoginScreen()),
           ),
           actions: [UserAvatar()],
         ),

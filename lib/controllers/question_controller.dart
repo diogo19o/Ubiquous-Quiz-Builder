@@ -164,7 +164,7 @@ class QuestionController extends GetxController
     update();
 
     // Assim que seleciona uma resposta espera X segundos ate avancar de pergunta
-    Future.delayed(Duration(seconds: 5), () {
+    Future.delayed(Duration(seconds: 3), () {
       nextQuestion();
     });
   }
@@ -283,8 +283,6 @@ class QuestionController extends GetxController
       }
 
       _services.sendResultToServer(mapResultado);
-
-
 
       // Get package provide us simple way to navigate another page
       Get.off(() => ScoreScreen(), arguments: quizStatus);

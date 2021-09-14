@@ -4,8 +4,8 @@ part 'questionario_details.g.dart';
 
 @JsonSerializable()
 class QuestionarioDetails {
-
-  @JsonKey(name: 'QuestionarioID', fromJson:_stringToInt, toJson: _stringFromInt)
+  @JsonKey(
+      name: 'QuestionarioID', fromJson: _stringToInt, toJson: _stringFromInt)
   final int id;
   @JsonKey(name: 'Modo')
   final String modo;
@@ -17,29 +17,35 @@ class QuestionarioDetails {
   final String dataDeCriacao;
   @JsonKey(name: 'Dificuldade')
   final String dificuldade;
-  @JsonKey(name: 'TimerMinutos', fromJson:_stringToInt, toJson: _stringFromInt)
+  @JsonKey(name: 'TimerMinutos', fromJson: _stringToInt, toJson: _stringFromInt)
   int timerMinutos;
-  @JsonKey(name: 'TimerSegundos', fromJson:_stringToInt, toJson: _stringFromInt)
+  @JsonKey(
+      name: 'TimerSegundos', fromJson: _stringToInt, toJson: _stringFromInt)
   int timerSegundos;
+  @JsonKey(name: 'Acesso')
+  final String acesso;
 
   String estado;
 
-  QuestionarioDetails({
-      this.id,
+  QuestionarioDetails(
+      {this.id,
       this.modo,
       this.titulo,
       this.descricao,
       this.dataDeCriacao,
       this.dificuldade,
       this.timerMinutos,
-      this.timerSegundos});
+      this.timerSegundos,
+      this.acesso});
 
-  factory QuestionarioDetails.fromJson(Map<String, dynamic> json) => _$QuestionarioDetailsFromJson(json);
+  factory QuestionarioDetails.fromJson(Map<String, dynamic> json) =>
+      _$QuestionarioDetailsFromJson(json);
 
   // 8
   Map<String, dynamic> toJson() => _$QuestionarioDetailsToJson(this);
 
+  static int _stringToInt(String number) =>
+      number == null ? null : int.parse(number);
 
-  static int _stringToInt(String number) => number == null ? null : int.parse(number);
   static String _stringFromInt(int number) => number?.toString();
 }
