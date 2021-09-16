@@ -244,7 +244,7 @@ class _ListQuestionariosState extends State<ListQuestionarios> {
       case "title_asc":
         {
           setState(() {
-            questionarios.sort((x, y) => x.titulo.compareTo(y.titulo));
+            questionarios.sort((x, y) => x.titulo.toLowerCase().compareTo(y.titulo.toLowerCase()));
           });
           title_asc = true;
         }
@@ -252,7 +252,7 @@ class _ListQuestionariosState extends State<ListQuestionarios> {
       case "title_dsc":
         {
           setState(() {
-            questionarios.sort((x, y) => y.titulo.compareTo(x.titulo));
+            questionarios.sort((x, y) => y.titulo.toLowerCase().compareTo(x.titulo.toLowerCase()));
           });
           title_asc = false;
         }

@@ -15,6 +15,8 @@ class QuestionarioDetails {
   final String descricao;
   @JsonKey(name: 'DataDeCriacao')
   final String dataDeCriacao;
+  @JsonKey(name: 'UserCriacao')
+  final String IDuserCriador;
   @JsonKey(name: 'Dificuldade')
   final String dificuldade;
   @JsonKey(name: 'TimerMinutos', fromJson: _stringToInt, toJson: _stringFromInt)
@@ -33,6 +35,7 @@ class QuestionarioDetails {
       this.titulo,
       this.descricao,
       this.dataDeCriacao,
+      this.IDuserCriador,
       this.dificuldade,
       this.timerMinutos,
       this.timerSegundos,

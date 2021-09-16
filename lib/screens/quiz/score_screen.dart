@@ -184,7 +184,7 @@ class ScoreScreen extends StatelessWidget {
               )*/
                   Text.rich(
                       TextSpan(
-                        text: "Score - ${status["score"]}",
+                        text: "Score : ${status["score"]}",
                         style: Theme.of(context)
                             .textTheme
                             .headline4

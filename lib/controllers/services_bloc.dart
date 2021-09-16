@@ -391,4 +391,23 @@ class Services {
 
     return [totalJogos, respostasCertas, respostasErradas, percentagemAcerto];
   }
+
+  String getUserById(String userID) {
+    for(Utilizador user in dataSource.utilizadores){
+      if(user.id.toString() == userID){
+        return user.nome;
+      }
+    }
+  }
+
+  int getNumberOfQuestions(String quizID){
+    int numPerguntas = 0;
+    for(Pergunta pergunta  in dataSource.perguntas){
+      if(pergunta.questionarioID.toString() == quizID){
+        numPerguntas++;
+      }
+    }
+    return numPerguntas;
+  }
+
 }
