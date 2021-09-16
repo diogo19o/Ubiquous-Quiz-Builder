@@ -318,7 +318,7 @@ class QuestionController extends GetxController
           return "Boa! Conseguiste acertar metade do questionário.";
         }
       } else {
-        return "Fim do Contra Relogio";
+        return "Fim do Contrarrelógio";
       }
     }
       return "Fim do questionário!";
